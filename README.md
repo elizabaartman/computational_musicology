@@ -1,2 +1,9 @@
-# computational_musicology 
-## this repository is da bomb and I can commit changes from my local computer 
+# Portfolio Computational Musicology
+#### Introduction
+The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
+
+The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics at nporadio2.nl/top2000) and most likely making the list conform to its time. What exactly are the differences between the list now and the list from 1999? Has there only been a change in songs or did the new generation also introduce new styles?
+
+The corpus consists of two playlists: the TOP2000 list from 1999 and the TOP2000 list from 2022. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using two already existing playlists on Spotify that I have checked on accuracy. Even though both playlists are carefully contrusted, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs and the list from 2022 containing 1999 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
+
+An example of a song that is remarkable in the TOP2000 from 2022 is Danny Vera's Rollercoaster. In 2019 the song entered the list, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.

@@ -1,30 +1,68 @@
 ---
 title: "Portfolio Computational Musicology"
 author: "Eliza"
-date: "2023-02-12"
+date: "spring 2023"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse)
+library(spotifyr)
 ```
 
-## R Markdown
+```{r}
+Top1999 <- get_playlist_audio_features("", "0qSHbyaiZbhacDdIegMoBR")
+Top2009 <- get_playlist_audio_features("", "6BJbzcSvOunQpVCJuBLxEW")
+Top2019 <- get_playlist_audio_features("", "1MaaUHHVuXbmrDhoUCDDcL")
+Top2022 <- get_playlist_audio_features("", "4U5UXciYphLDZAIgjdz50v")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+Top2000lists <-
+  bind_rows(
+    Top1999 |> mutate(category = "1999"),
+    Top2009 |> mutate(category = "2009"),
+    Top2019 |> mutate(category = "2019"),
+    Top2022 |> mutate(category = "2022")
+  )
 ```
 
-## Including Plots
+I tried out a few plots, trying to maximize the amount of data. First I made a histogram, which I felt like wasn't very suitable for having more variables. In the histograms below you can see the amount of songs per valence in four years of Top 2000.
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+Top2000lists |>
+  ggplot(aes(x = valence)) +
+  geom_histogram(binwidth = 0.1) +
+  facet_wrap(~category)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+After the histograms I tried to make a scatterplot. However, I was overwhelmed by the dots on screen so I figured that I needed to make the data more visible. This led me to making a line plot.
+
+```{r}
+Top2000lists |>
+  ggplot(
+    aes(x = valence, y = danceability)) +
+      geom_smooth() +
+  facet_wrap(~category)
+```
+
+I was still intrigued by the scatterplot idea so I wanted to try and make it work, also because this would be the best option to have more than 2 variables in the plot. I'm still not entirely sure what the best way would be to make the plot less overwhelming with the amount of data. I was thinking of possibly only using the top 100 of the different years but I don't know if that would be the best solution.
+
+```{r}
+Top2000lists |>
+  ggplot(
+    aes(
+      x = valence,
+      y = danceability,
+      colour = mode,
+      alpha = 0.001)
+    ) + scale_alpha(guide = "none") +
+  geom_point() +
+  facet_wrap(~category) +
+  theme_classic() +
+  labs(
+    x = "Valence",
+    y = "Danceability",
+    colour = "Mode",
+  )
+```
+
+The histogram is interesting because it shows very clearly that music in the TOP 2000 was more positive or happier compared to songs from the TOP 2000 in the other years. In the second plot, the line plot, you can again see a difference between 1999 and the other years. However, in this plot the differences aren't that big. The scatterplot is hard to read because there is so much data but it looks like there are more songs in a major key (mode) in 1999 compared to the other years. 

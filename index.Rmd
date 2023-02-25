@@ -9,6 +9,7 @@ output: flexdashboard::flex_dashboard
 library(tidyverse)
 library(spotifyr)
 library(compmus)
+library(plotly)
 ```
 
 ```{r}
@@ -212,7 +213,7 @@ Column
 I was still intrigued by the scatterplot idea so I wanted to try and make it work, also because this would be the best option to have more than 2 variables in the plot. I'm still not entirely sure what the best way would be to make the plot less overwhelming with the amount of data. I was thinking of possibly only using the top 100 of the different years but I don't know if that would be the best solution.
 
 ```{r}
-Top2000lists |>
+Top2000_scatter <- Top2000lists |>
   ggplot(
     aes(
       x = valence,
@@ -228,6 +229,8 @@ Top2000lists |>
     y = "Danceability",
     colour = "Mode",
   )
+
+ggplotly(Top2000_scatter)
 ```
 
 The histogram is interesting because it shows very clearly that music in the TOP 2000 was more positive or happier compared to songs from the TOP 2000 in the other years. In the second plot, the line plot, you can again see a difference between 1999 and the other years. However, in this plot the differences aren't that big. The scatterplot is hard to read because there is so much data but it looks like there are more songs in a major key (mode) in 1999 compared to the other years.

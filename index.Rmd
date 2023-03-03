@@ -5,6 +5,7 @@ date: "spring 2023"
 output: 
   flexdashboard::flex_dashboard:
     storyboard: true
+    self_contained: false
 ---
 
 ```{r}
@@ -29,7 +30,79 @@ Top2000lists <-
   )
 ```
 
-### How pitch makes Bohemian Rhapsody number 1
+### What is the TOP2000? {data-commentary-width=500}
+
+The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
+
+The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics [here](https://www.nporadio2.nl/top2000/statistieken)) and most likely making the list conform to its time. What exactly are the differences between the list now and the list from 1999? Has there only been a change in songs or did the new generation also introduce new styles?
+
+The corpus consists of four playlists: the TOP2000 list from 1999, 2009, 2019 and 2022. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using two already existing playlists on Spotify that I have checked on accuracy, the other two playlists I have created myself. Even though the playlists are carefully constructed, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs, 2009 has 1982 songs, 2019 has 1993 songs and the list from 2022 contains 1999 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
+
+An example of a song that is remarkable in the TOP2000 from 2022 is Danny Vera's Rollercoaster. In 2019 the song entered the list, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
+
+***
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0qSHbyaiZbhacDdIegMoBR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6BJbzcSvOunQpVCJuBLxEW?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1MaaUHHVuXbmrDhoUCDDcL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4U5UXciYphLDZAIgjdz50v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Visualisation I {data-commentary-width=500}
+
+```{r}
+Top2000lists |>
+  ggplot(aes(x = valence)) +
+  geom_histogram(binwidth = 0.1) +
+  facet_wrap(~category)
+```
+
+***
+I tried out a few plots, trying to maximize the amount of data. First I made a histogram, which I felt like wasn't very suitable for having more variables. In the histograms below you can see the amount of songs per valence in four years of Top 2000.
+
+### Visualisation II {data-commentary-width=500}
+
+```{r}
+Top2000lists |>
+  ggplot(
+    aes(x = valence, y = danceability)) +
+      geom_smooth() +
+  facet_wrap(~category)
+```
+
+***
+After the histograms I tried to make a scatterplot. However, I was overwhelmed by the dots on screen so I figured that I needed to make the data more visible. This led me to making a line plot.
+
+### Visualisation III {data-commentary-width=500}
+
+```{r}
+Top2000_scatter <- Top2000lists |>
+  ggplot(
+    aes(
+      x = valence,
+      y = danceability,
+      colour = mode,
+      alpha = 0.001)
+    ) + scale_alpha(guide = "none") +
+  geom_point() +
+  facet_wrap(~category) +
+  theme_classic() +
+  labs(
+    x = "Valence",
+    y = "Danceability",
+    colour = "Mode",
+  )
+
+ggplotly(Top2000_scatter)
+```
+
+***
+I was still intrigued by the scatterplot idea so I wanted to try and make it work, also because this would be the best option to have more than 2 variables in the plot. I'm still not entirely sure what the best way would be to make the plot less overwhelming with the amount of data. I was thinking of possibly only using the top 100 of the different years but I don't know if that would be the best solution.
+
+The histogram is interesting because it shows very clearly that music in the TOP 2000 was more positive or happier compared to songs from the TOP 2000 in the other years. In the second plot, the line plot, you can again see a difference between 1999 and the other years. However, in this plot the differences aren't that big. The scatterplot is hard to read because there is so much data but it looks like there are more songs in a major key (mode) in 1999 compared to the other years.
+
+### How pitch makes Bohemian Rhapsody number 1 {data-commentary-width=500}
 
 ```{r}
 Bohemian <- 
@@ -58,165 +131,6 @@ Bohemian |>
 ```
 
 ***
-Bohemian Rhapsody by Queen is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years, with a few exceptions. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!). 
-
-### Introduction
-
-The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
-
-The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics at nporadio2.nl/top2000) and most likely making the list conform to its time. What exactly are the differences between the list now and the list from 1999? Has there only been a change in songs or did the new generation also introduce new styles?
-
-The corpus consists of two playlists: the TOP2000 list from 1999 and the TOP2000 list from 2022. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using two already existing playlists on Spotify that I have checked on accuracy. Even though both playlists are carefully contrusted, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs and the list from 2022 containing 1999 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
-
-An example of a song that is remarkable in the TOP2000 from 2022 is Danny Vera's Rollercoaster. In 2019 the song entered the list, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
-
-### Visualisation I
-
-```{r}
-Top2000lists |>
-  ggplot(aes(x = valence)) +
-  geom_histogram(binwidth = 0.1) +
-  facet_wrap(~category)
-```
-
-***
-I tried out a few plots, trying to maximize the amount of data. First I made a histogram, which I felt like wasn't very suitable for having more variables. In the histograms below you can see the amount of songs per valence in four years of Top 2000.
-
-### Visualisation II
-
-```{r}
-Top2000lists |>
-  ggplot(
-    aes(x = valence, y = danceability)) +
-      geom_smooth() +
-  facet_wrap(~category)
-```
-
-***
-After the histograms I tried to make a scatterplot. However, I was overwhelmed by the dots on screen so I figured that I needed to make the data more visible. This led me to making a line plot.
-
-### Visualisation III
-
-```{r}
-Top2000_scatter <- Top2000lists |>
-  ggplot(
-    aes(
-      x = valence,
-      y = danceability,
-      colour = mode,
-      alpha = 0.001)
-    ) + scale_alpha(guide = "none") +
-  geom_point() +
-  facet_wrap(~category) +
-  theme_classic() +
-  labs(
-    x = "Valence",
-    y = "Danceability",
-    colour = "Mode",
-  )
-
-ggplotly(Top2000_scatter)
-```
-
-***
-I was still intrigued by the scatterplot idea so I wanted to try and make it work, also because this would be the best option to have more than 2 variables in the plot. I'm still not entirely sure what the best way would be to make the plot less overwhelming with the amount of data. I was thinking of possibly only using the top 100 of the different years but I don't know if that would be the best solution.
-
-The histogram is interesting because it shows very clearly that music in the TOP 2000 was more positive or happier compared to songs from the TOP 2000 in the other years. In the second plot, the line plot, you can again see a difference between 1999 and the other years. However, in this plot the differences aren't that big. The scatterplot is hard to read because there is so much data but it looks like there are more songs in a major key (mode) in 1999 compared to the other years.
-
-### Workinprogress Cohen vs. Buckley
-
-```{r}
-## Leonard Cohen
-Cohen <-
-  get_tidy_audio_analysis("7yzbimr8WVyAtBX3Eg6UL9") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-## Jeff Buckley
-Buckley <-
-  get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-## Lisa Lois
-Lois <-
-  get_tidy_audio_analysis("0m86OeKQHxdpygDPzGQUPK") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-```
-
-```{r}
-compmus_long_distance(
-  Cohen |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  Buckley |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  feature = pitches,
-  method = "cosine"
-) |>
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_equal() +
-  labs(x = "Leonard Cohen", y = "Jeff Buckley") +
-  theme_minimal() +
-  scale_fill_viridis_c(guide = NULL)
-```
-
-### Workinprogress Cohen vs. Lois
-
-```{r}
-compmus_long_distance(
-  Cohen |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  Lois |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  feature = pitches,
-  method = "cosine"
-) |>
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_equal() +
-  labs(x = "Leonard Cohen", y = "Lisa Lois") +
-  theme_minimal() +
-  scale_fill_viridis_c(guide = NULL)
-```
-
-### Workinprogress Lois vs. Buckley
-
-```{r}
-compmus_long_distance(
-  Lois |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  Buckley |> mutate(pitches = map(pitches, compmus_normalise, "chebyshev")),
-  feature = pitches,
-  method = "cosine"
-) |>
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_equal() +
-  labs(x = "Lisa Lois", y = "Jeff Buckley") +
-  theme_minimal() +
-  scale_fill_viridis_c(guide = NULL)
-```
+Bohemian Rhapsody by Queen is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years, with a few exceptions. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
 
 ### Conclusion

@@ -30,6 +30,50 @@ Top2000lists <-
   )
 ```
 
+### NEW 1 {data-commentary-width=500}
+```{r}
+Avond <-
+  get_tidy_audio_analysis("3n3F07lHLyRKwqg4q64eYA") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+Avond |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+```
+
+***
+Cepstrogram of Avond by Boudewijn de Groot. 
+
+### NEW 2 {data-commentary-width=500}
+
+
 ### What is the TOP2000? {data-commentary-width=500}
 
 The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.

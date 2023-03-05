@@ -30,6 +30,236 @@ Top2000lists <-
   )
 ```
 
+### Who Wants to Live Forever might be the saddest song in the TOP2000 {data-commentary-width=400}
+
+#### Chromagram {data-commentary-width=400}
+```{r}
+WWTLF1 <- 
+  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+WWTLF1_chromagram <- WWTLF1 |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+
+ggplotly(WWTLF1_chromagram)
+```
+
+#### Cepstrogram {data-commentary-width=400}
+```{r}
+WWTLF2 <-
+  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+WWTLF2_cepstrogram <- WWTLF2 |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+
+ggplotly(WWTLF2_cepstrogram)
+```
+
+#### Self-Similarity Matrix Pitch {data-commentary-width=400}
+```{r}
+WWTLF1 |>
+  compmus_self_similarity(pitches, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+#### Self-Similarity Matrix Timbre {data-commentary-width=400}
+```{r}
+WWTLF2 |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+***
+Another interesting song by Queen in the TOP2000 is Who Wants to Live Forever. This song turned out to be an outlier in the scatter plot by having a low valence score and a low danceability score. That makes the song perhaps the saddest in the TOP2000. From the chromagram, cepstrogram and the two self-similarity matrices it becomes more clear how the song is built. 
+In the chromagram you can see that there is a lot of E, which can be explained by the key of the song. The E-minor scale consists of E F# G A B C D, therefore it is no surprise that the chromagram shows a higher magnitude for these tones.
+The cepstrogram gives more information about the timbre of this song. There is not too much variety in timbre, c02 is relatively yellow through almost the entire song, however c01 till c06 show some magnitude.
+The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
+
+### The rising star of the last decade: Fix You {data-commentary-width=400}
+
+#### Chromagram {data-commentary-width=400}
+```{r}
+FixYou1 <- 
+  get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+FixYou1_chromagram <- FixYou1 |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+
+ggplotly(FixYou1_chromagram)
+```
+
+#### Cepstrogram {data-commentary-width=400}
+```{r}
+FixYou2 <-
+  get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+FixYou2_cepstrogram <- FixYou2 |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic()
+
+ggplotly(FixYou2_cepstrogram)
+```
+
+#### Self-Similarity Matrix Pitch {data-commentary-width=400}
+```{r}
+FixYou1 |>
+  compmus_self_similarity(pitches, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+#### Self-Similarity Matrix Timbre {data-commentary-width=400}
+```{r}
+FixYou2 |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "")
+```
+
+***
+Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
+The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
+There is not much variety of timbre in Fix You, as is shown in the cepstrogram. The highest magnitudes lie at C01 to C03 throughout the entire song. In the first half of the song there are lower magnitudes up till C08, however after approximately 150 seconds, in the second half of the song, only C06 is left of these.
+Even though the self-similarity matrix for pitch is not too clear, with the help of the self-similarity matrix for timbre there is still some information to get from it. The most obvious change in both matrices happens around 150 seconds, this is the moment the guitar solo starts. The self-similarity matrix for timbre shows another change about 30 seconds later, the moment the drums kick in. Although it's not very obvious, the self-similarity matrix reveal the repetition of the chorus with a chessboard-like pattern at 70-90 seconds, 130-150 seconds and 260-280 seconds.
+
 ### What is the TOP2000? {data-commentary-width=500}
 
 The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
@@ -115,229 +345,5 @@ ggplotly(Bohemian_chromagram)
 
 ***
 Let's first look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
-
-### Who Wants to Live Forever might be the saddest song in the TOP2000 {data-commentary-width=400}
-
-#### Chromagram
-```{r}
-WWTLF1 <- 
-  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-
-WWTLF1_chromagram <- WWTLF1 |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  theme_minimal() +
-  scale_fill_viridis_c()
-
-ggplotly(WWTLF1_chromagram)
-```
-
-#### Self-Similarity Matrice Pitch
-```{r}
-WWTLF1 |>
-  compmus_self_similarity(pitches, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-#### Cepstrogram
-```{r}
-WWTLF2 <-
-  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-WWTLF2_cepstrogram <- WWTLF2 |>
-  compmus_gather_timbre() |>
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
-
-ggplotly(WWTLF2_cepstrogram)
-```
-
-#### Self-Similarity Matrice Timbre
-```{r}
-WWTLF2 |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-***
-Another interesting song by Queen in the TOP2000 is Who Wants to Live Forever. This song turned out to be an outlier in the scatter plot by having a low valence score and a low danceability score.
-
-### Fix You by Coldplay {data-commentary-width=400}
-
-#### Chromagram
-```{r}
-FixYou1 <- 
-  get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-
-FixYou1_chromagram <- FixYou1 |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  theme_minimal() +
-  scale_fill_viridis_c()
-
-ggplotly(FixYou1_chromagram)
-```
-
-#### Self-Similarity Matrice Pitch
-```{r}
-FixYou1 |>
-  compmus_self_similarity(pitches, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-#### Cepstrogram
-```{r}
-FixYou2 <-
-  get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
-
-FixYou2_cepstrogram <- FixYou2 |>
-  compmus_gather_timbre() |>
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
-
-ggplotly(FixYou2_cepstrogram)
-```
-
-#### Self-Similarity Matrice Timbre
-```{r}
-FixYou2 |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-***
-Explanation of the data
 
 ### Conclusion

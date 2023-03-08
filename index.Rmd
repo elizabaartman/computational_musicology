@@ -289,7 +289,8 @@ Top2000_scatter <- Top2000lists |>
     aes(
       x = valence,
       y = danceability,
-      colour = mode)) +
+      colour = mode,
+      text = track.name)) +
   geom_point(alpha = 0.5) +
   facet_wrap(~category) +
    scale_x_continuous(

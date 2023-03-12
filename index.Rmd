@@ -30,9 +30,277 @@ Top2000lists <-
   )
 ```
 
-### Who Wants to Live Forever might be the saddest song in the TOP2000 {data-commentary-width=400}
+```{r}
+circshift <- function(v, n) {
+  if (n == 0) v else c(tail(v, n), head(v, -n))
+}
 
-#### Chromagram {data-commentary-width=400}
+#      C     C#    D     Eb    E     F     F#    G     Ab    A     Bb    B
+major_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    0,    0)
+minor_chord <-
+  c(   1,    0,    0,    1,    0,    0,    0,    1,    0,    0,    0,    0)
+seventh_chord <-
+  c(   1,    0,    0,    0,    1,    0,    0,    1,    0,    0,    1,    0)
+
+major_key <-
+  c(6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88)
+minor_key <-
+  c(6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17)
+
+chord_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:7", circshift(seventh_chord, 6),
+    "Gb:maj", circshift(major_chord, 6),
+    "Bb:min", circshift(minor_chord, 10),
+    "Db:maj", circshift(major_chord, 1),
+    "F:min", circshift(minor_chord, 5),
+    "Ab:7", circshift(seventh_chord, 8),
+    "Ab:maj", circshift(major_chord, 8),
+    "C:min", circshift(minor_chord, 0),
+    "Eb:7", circshift(seventh_chord, 3),
+    "Eb:maj", circshift(major_chord, 3),
+    "G:min", circshift(minor_chord, 7),
+    "Bb:7", circshift(seventh_chord, 10),
+    "Bb:maj", circshift(major_chord, 10),
+    "D:min", circshift(minor_chord, 2),
+    "F:7", circshift(seventh_chord, 5),
+    "F:maj", circshift(major_chord, 5),
+    "A:min", circshift(minor_chord, 9),
+    "C:7", circshift(seventh_chord, 0),
+    "C:maj", circshift(major_chord, 0),
+    "E:min", circshift(minor_chord, 4),
+    "G:7", circshift(seventh_chord, 7),
+    "G:maj", circshift(major_chord, 7),
+    "B:min", circshift(minor_chord, 11),
+    "D:7", circshift(seventh_chord, 2),
+    "D:maj", circshift(major_chord, 2),
+    "F#:min", circshift(minor_chord, 6),
+    "A:7", circshift(seventh_chord, 9),
+    "A:maj", circshift(major_chord, 9),
+    "C#:min", circshift(minor_chord, 1),
+    "E:7", circshift(seventh_chord, 4),
+    "E:maj", circshift(major_chord, 4),
+    "G#:min", circshift(minor_chord, 8),
+    "B:7", circshift(seventh_chord, 11),
+    "B:maj", circshift(major_chord, 11),
+    "D#:min", circshift(minor_chord, 3)
+  )
+
+key_templates <-
+  tribble(
+    ~name, ~template,
+    "Gb:maj", circshift(major_key, 6),
+    "Bb:min", circshift(minor_key, 10),
+    "Db:maj", circshift(major_key, 1),
+    "F:min", circshift(minor_key, 5),
+    "Ab:maj", circshift(major_key, 8),
+    "C:min", circshift(minor_key, 0),
+    "Eb:maj", circshift(major_key, 3),
+    "G:min", circshift(minor_key, 7),
+    "Bb:maj", circshift(major_key, 10),
+    "D:min", circshift(minor_key, 2),
+    "F:maj", circshift(major_key, 5),
+    "A:min", circshift(minor_key, 9),
+    "C:maj", circshift(major_key, 0),
+    "E:min", circshift(minor_key, 4),
+    "G:maj", circshift(major_key, 7),
+    "B:min", circshift(minor_key, 11),
+    "D:maj", circshift(major_key, 2),
+    "F#:min", circshift(minor_key, 6),
+    "A:maj", circshift(major_key, 9),
+    "C#:min", circshift(minor_key, 1),
+    "E:maj", circshift(major_key, 4),
+    "G#:min", circshift(minor_key, 8),
+    "B:maj", circshift(major_key, 11),
+    "D#:min", circshift(minor_key, 3)
+  )
+```
+
+### What is the TOP2000? {data-commentary-width=500}
+
+The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
+
+The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics [here](https://www.nporadio2.nl/top2000/statistieken)) and most likely making the list conform to its time. What exactly are the differences between the list now and the list from 1999? Has there only been a change in songs or did the new generation also introduce new styles?
+
+The corpus consists of four playlists: the TOP2000 list from 1999, 2009, 2019 and 2022. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using two already existing playlists on Spotify that I have checked on accuracy, the other two playlists I have created myself. Even though the playlists are carefully constructed, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs, 2009 has 1982 songs, 2019 has 1993 songs and the list from 2022 contains 1999 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
+
+An example of a song that is remarkable in the TOP2000 from 2022 is Danny Vera's Rollercoaster. In 2019 the song entered the list, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
+
+***
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0qSHbyaiZbhacDdIegMoBR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6BJbzcSvOunQpVCJuBLxEW?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1MaaUHHVuXbmrDhoUCDDcL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4U5UXciYphLDZAIgjdz50v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Overview of relation between valence, danceability and mode in TOP 2000 {data-commentary-width=250}
+
+```{r}
+Top2000_scatter <- Top2000lists |> 
+  mutate(
+    mode = ifelse(mode == 0, "Minor", "Major")) |>
+  ggplot(
+    aes(
+      x = valence,
+      y = danceability,
+      colour = mode,
+      text = track.name)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~category) +
+   scale_x_continuous(
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),  
+    minor_breaks = NULL    
+  ) +
+  scale_y_continuous(
+    limits = c(0, 1),
+    breaks = c(0, 0.50, 1),
+    minor_breaks = NULL
+  ) +
+  theme_classic() +
+  labs(
+    x = "Valence",
+    y = "Danceability",
+    colour = "Mode",
+  )
+
+ggplotly(Top2000_scatter)
+```
+
+***
+In this scatter plot you can see the relation between valence, danceability and mode in the TOP2000.
+
+### Timbre in the Top 2000
+```{r}
+Top1999timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "55s8gstHcaCyfU47mQgLrB"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2009timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "2cjIvuw4VVOQSeUAZfNiqY"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2019timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "2cjIvuw4VVOQSeUAZfNiqY"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2022timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "2cjIvuw4VVOQSeUAZfNiqY"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2000timbre <-
+  bind_rows(
+   Top1999timbre |> mutate(year = "1999"),
+   Top2009timbre |> mutate(year = "2009"),
+   Top2019timbre |> mutate(year = "2019"),
+   Top2022timbre |> mutate(year = "2022")
+  )
+```
+
+```{r}
+Top2000timbre |>
+  mutate(
+    timbre =
+      map(
+        segments,
+        compmus_summarise,
+        timbre,
+        method = "mean"
+      )
+  ) |>
+  select(year, timbre) |>
+  compmus_gather_timbre() |>
+  ggplot(aes(x = basis, y = value, fill = year)) +
+  geom_violin() +
+  scale_fill_viridis_d() +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Year")
+```
+
+### Top2000 loudness and tempo
+```{r}
+Top2000timbre |>
+  mutate(
+    sections =
+      map(
+        sections,                                    # sections or segments
+        summarise_at,
+        vars(tempo, loudness, duration),             # features of interest
+        list(section_mean = mean, section_sd = sd)   # aggregation functions
+      )
+  ) |>
+  unnest(sections) |>
+  ggplot(
+    aes(
+      x = tempo,
+      y = tempo_section_sd,
+      colour = year,
+      alpha = loudness,
+      text = track.name
+    )
+  ) +
+  geom_point(aes(size = duration / 60)) +
+  geom_rug() +
+  theme_minimal() +
+  ylim(0, 5) +
+  labs(
+    x = "Mean Tempo (bpm)",
+    y = "SD Tempo",
+    colour = "Year",
+    size = "Duration (min)",
+    alpha = "Volume (dBFS)"
+  )
+```
+
+### How pitch makes Bohemian Rhapsody number 1 {data-commentary-width=400}
+
+```{r}
+Bohemian <- 
+  get_tidy_audio_analysis("4u7EnebtmKWzUH433cf5Qv") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+Bohemian_chromagram <- Bohemian |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+
+ggplotly(Bohemian_chromagram)
+```
+
+***
+Let's first look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
+
+### Who Wants to Live Forever might be the saddest song in the TOP2000
+
+#### Chromagram
 ```{r}
 WWTLF1 <- 
   get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
@@ -59,7 +327,7 @@ WWTLF1_chromagram <- WWTLF1 |>
 ggplotly(WWTLF1_chromagram)
 ```
 
-#### Cepstrogram {data-commentary-width=400}
+#### Cepstrogram
 ```{r}
 WWTLF2 <-
   get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
@@ -99,7 +367,7 @@ WWTLF2_cepstrogram <- WWTLF2 |>
 ggplotly(WWTLF2_cepstrogram)
 ```
 
-#### Self-Similarity Matrix Pitch {data-commentary-width=400}
+#### Self-Similarity Matrix Pitch
 ```{r}
 WWTLF1 |>
   compmus_self_similarity(pitches, "cosine") |> 
@@ -119,7 +387,7 @@ WWTLF1 |>
   labs(x = "", y = "")
 ```
 
-#### Self-Similarity Matrix Timbre {data-commentary-width=400}
+#### Self-Similarity Matrix Timbre
 ```{r}
 WWTLF2 |>
   compmus_self_similarity(timbre, "cosine") |> 
@@ -232,10 +500,7 @@ FixYou1 |>
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
   labs(x = "", y = "")
-```
 
-#### Self-Similarity Matrix Timbre {data-commentary-width=400}
-```{r}
 FixYou2 |>
   compmus_self_similarity(timbre, "cosine") |> 
   ggplot(
@@ -260,91 +525,66 @@ The chromagram is evident with separately showing the chords that are being play
 There is not much variety of timbre in Fix You, as is shown in the cepstrogram. The highest magnitudes lie at C01 to C03 throughout the entire song. In the first half of the song there are lower magnitudes up till C08, however after approximately 150 seconds, in the second half of the song, only C06 is left of these.
 Even though the self-similarity matrix for pitch is not too clear, with the help of the self-similarity matrix for timbre there is still some information to get from it. The most obvious change in both matrices happens around 150 seconds, this is the moment the guitar solo starts. The self-similarity matrix for timbre shows another change about 30 seconds later, the moment the drums kick in. Although it's not very obvious, the self-similarity matrix reveal the repetition of the chorus with a chessboard-like pattern at 70-90 seconds, 130-150 seconds and 260-280 seconds.
 
-### What is the TOP2000? {data-commentary-width=500}
+### Hey Jude {data-commentary-width=400}
 
-The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
-
-The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics [here](https://www.nporadio2.nl/top2000/statistieken)) and most likely making the list conform to its time. What exactly are the differences between the list now and the list from 1999? Has there only been a change in songs or did the new generation also introduce new styles?
-
-The corpus consists of four playlists: the TOP2000 list from 1999, 2009, 2019 and 2022. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using two already existing playlists on Spotify that I have checked on accuracy, the other two playlists I have created myself. Even though the playlists are carefully constructed, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs, 2009 has 1982 songs, 2019 has 1993 songs and the list from 2022 contains 1999 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
-
-An example of a song that is remarkable in the TOP2000 from 2022 is Danny Vera's Rollercoaster. In 2019 the song entered the list, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
-
-***
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0qSHbyaiZbhacDdIegMoBR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6BJbzcSvOunQpVCJuBLxEW?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1MaaUHHVuXbmrDhoUCDDcL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4U5UXciYphLDZAIgjdz50v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-### Overview of relation between valence, danceability and mode in TOP 2000 {data-commentary-width=250}
-
+#### Keygram
 ```{r}
-Top2000_scatter <- Top2000lists |> 
+Jude <-
+  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
   mutate(
-    mode = ifelse(mode == 0, "Minor", "Major")) |>
-  ggplot(
-    aes(
-      x = valence,
-      y = danceability,
-      colour = mode,
-      text = track.name)) +
-  geom_point(alpha = 0.5) +
-  facet_wrap(~category) +
-   scale_x_continuous(
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),  
-    minor_breaks = NULL    
-  ) +
-  scale_y_continuous(
-    limits = c(0, 1),
-    breaks = c(0, 0.50, 1),
-    minor_breaks = NULL
-  ) +
-  theme_classic() +
-  labs(
-    x = "Valence",
-    y = "Danceability",
-    colour = "Mode",
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
   )
 
-ggplotly(Top2000_scatter)
-```
-
-***
-In this scatter plot you can see the relation between valence, danceability and mode in the TOP2000.
-
-### How pitch makes Bohemian Rhapsody number 1 {data-commentary-width=400}
-
-```{r}
-Bohemian <- 
-  get_tidy_audio_analysis("4u7EnebtmKWzUH433cf5Qv") |>
-  select(segments) |>
-  unnest(segments) |>
-  select(start, duration, pitches)
-
-Bohemian_chromagram <- Bohemian |>
-  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
-  compmus_gather_chroma() |> 
+Jude |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
   ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = pitch_class,
-      fill = value
-    )
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  scale_fill_viridis_c()
-
-ggplotly(Bohemian_chromagram)
+  labs(x = "Time (s)", y = "")
 ```
 
-***
-Let's first look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
+#### Chordogram
+```{r}
+Jude2 <-
+  get_tidy_audio_analysis("1eT2CjXwFXNx6oY5ydvzKU") |>
+  compmus_align(bars, segments) |>
+  select(bars) |>
+  unnest(bars) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Jude2 |> 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+```
 
 ### Conclusion

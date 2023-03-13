@@ -178,7 +178,7 @@ Top2000timbre |>
 ```
 
 ***
-This plot shows the timbre values from 3 years of TOP 2000. 
+This plot shows the timbre values from 3 years of the TOP 2000. Only the first 100 songs of the playlists are used for this plot. A few timbre coefficients show differences between the four years. For example c02, c04, c06 and c012. In c06 the year of 2009 stands out, the violin has a much longer shape compared to the other years. The same is true for c12 where 1999 has a longer and different shape than the other years. The violins of 2019 and 2022 are very alike for all of the timbre coefficients. This might be because there are only 3 years in between. It means that the first 100 songs in these playlists "sound" relatively the same.
 
 ### Hey Jude {data-commentary-width=400}
 
@@ -213,7 +213,7 @@ Jude |>
 ```
 
 ***
-sdfsdfsd
+The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
 
 #### Chordogram {data-commentary-width=400}
 ```{r}
@@ -246,8 +246,7 @@ Jude2 |>
 ```
 
 ***
-sldkfjsldkfj
-
+The first chords of Hey Jude are clearly visible in the chordogram. These are F-maj, C-maj, F-maj and BB-maj. These chords aren't very surprising because they are the I, V and IV.
 
 ### Loudness, tempo and duration {data-commentary-width=400}
 ```{r}
@@ -286,8 +285,7 @@ Top2000timbre |>
 ```
 
 ***
-(Disclaimer: I haven't figured out why it's not showing 2009)
-
+This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
 
 ### What is the TOP2000? {data-commentary-width=500}
 

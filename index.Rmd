@@ -4,9 +4,10 @@ author: "Eliza"
 date: "spring 2023"
 output: 
   flexdashboard::flex_dashboard:
-    storyboard: true
     self_contained: false
     theme: simplex
+    vertical_layout: fill
+    horizontal_layout: scroll
 ---
 
 ```{r}
@@ -119,175 +120,13 @@ key_templates <-
   )
 ```
 
-### Timbre in the Top 2000 {data-commentary-width=400}
-```{r}
-Top1999timbre <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "55s8gstHcaCyfU47mQgLrB"
-  ) |>
-  slice(1:100) |>
-  add_audio_analysis()
-Top2009timbre <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "2cjIvuw4VVOQSeUAZfNiqY"
-  ) |>
-  slice(1:100) |>
-  add_audio_analysis()
-Top2019timbre <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "1MaaUHHVuXbmrDhoUCDDcL"
-  ) |>
-  slice(1:100) |>
-  add_audio_analysis()
-Top2022timbre <-
-  get_playlist_audio_features(
-    "thesoundsofspotify",
-    "4U5UXciYphLDZAIgjdz50v"
-  ) |>
-  slice(1:100) |>
-  add_audio_analysis()
-Top2000timbre <-
-  bind_rows(
-   Top1999timbre |> mutate(year = "1999"),
-   Top2009timbre |> mutate(year = "2009"),
-   Top2019timbre |> mutate(year = "2019"),
-   Top2022timbre |> mutate(year = "2022")
-  )
-```
+What is the TOP2000?
+===================================================
 
-```{r}
-Top2000timbre |>
-  mutate(
-    timbre =
-      map(
-        segments,
-        compmus_summarise,
-        timbre,
-        method = "mean"
-      )
-  ) |>
-  select(year, timbre) |>
-  compmus_gather_timbre() |>
-  ggplot(aes(x = basis, y = value, fill = year)) +
-  geom_violin() +
-  scale_fill_viridis_d() +
-  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Year")
-```
+Column {data-width=600}
+---------------------------------------------------
 
-***
-This plot shows the timbre values from 3 years of the TOP 2000. Only the first 100 songs of the playlists are used for this plot. A few timbre coefficients show differences between the four years. For example c02, c04, c06 and c012. In c06 the year of 2009 stands out, the violin has a much longer shape compared to the other years. The same is true for c12 where 1999 has a longer and different shape than the other years. The violins of 2019 and 2022 are very alike for all of the timbre coefficients. This might be because there are only 3 years in between. It means that the first 100 songs in these playlists "sound" relatively the same.
-
-### Hey Jude {data-commentary-width=400}
-
-#### Keygram {data-commentary-width=400}
-```{r}
-Jude <-
-  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
-  compmus_align(sections, segments) |>
-  select(sections) |>
-  unnest(sections) |>
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-Jude |> 
-  compmus_match_pitch_template(
-    key_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "")
-```
-
-***
-The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
-
-#### Chordogram {data-commentary-width=400}
-```{r}
-Jude2 <-
-  get_tidy_audio_analysis("1eT2CjXwFXNx6oY5ydvzKU") |>
-  compmus_align(bars, segments) |>
-  select(bars) |>
-  unnest(bars) |>
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-Jude2 |> 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "")
-```
-
-***
-The first chords of Hey Jude are clearly visible in the chordogram. These are F-maj, C-maj, F-maj and BB-maj. These chords aren't very surprising because they are the I, V and IV.
-
-### Loudness, tempo and duration {data-commentary-width=400}
-```{r}
-Top2000timbre |>
-  mutate(
-    sections =
-      map(
-        sections,                                    # sections or segments
-        summarise_at,
-        vars(tempo, loudness, duration),             # features of interest
-        list(section_mean = mean, section_sd = sd)   # aggregation functions
-      )
-  ) |>
-  unnest(sections) |>
-  ggplot(
-    aes(
-      x = tempo,
-      y = tempo_section_sd,
-      colour = year,
-      alpha = loudness,
-      text = track.name
-    )
-  ) +
-  geom_point(aes(size = duration / 60)) +
-  geom_rug() +
-  theme_light() +
-  ylim(0, 5) +
-  labs(
-    x = "Mean Tempo (bpm)",
-    y = "SD Tempo",
-    colour = "Year",
-    size = "Duration (min)",
-    alpha = "Volume (dBFS)"
-  )
-
-```
-
-***
-This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
-
-### What is the TOP2000? {data-commentary-width=500}
+### What is the TOP2000?
 
 The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
 
@@ -297,16 +136,24 @@ The corpus consists of four playlists: the TOP2000 list from 1999, 2009, and 201
 
 An example of a song that is remarkable in the TOP2000 from 2019 is Danny Vera's Rollercoaster. The song entered the list in this year, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
 
-***
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0qSHbyaiZbhacDdIegMoBR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Column {data-width=200}
+---------------------------------------------------
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6BJbzcSvOunQpVCJuBLxEW?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0qSHbyaiZbhacDdIegMoBR?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1MaaUHHVuXbmrDhoUCDDcL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6BJbzcSvOunQpVCJuBLxEW?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4U5UXciYphLDZAIgjdz50v?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Column {data-width=200}
+---------------------------------------------------
 
-### Overview of relation between valence, danceability and mode in TOP 2000 {data-commentary-width=250}
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1MaaUHHVuXbmrDhoUCDDcL?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4U5UXciYphLDZAIgjdz50v?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Visualisations {.storyboard}
+==================================================
+
+### Overview of relation between valence, danceability and mode in TOP 2000 {.storyboard, data-commentary-width=250}
 
 ```{r}
 Top2000_scatter <- Top2000lists |> 
@@ -343,7 +190,7 @@ ggplotly(Top2000_scatter)
 ***
 In this scatter plot you can see the relation between valence, danceability and mode in the TOP2000.
 
-### How pitch makes Bohemian Rhapsody number 1 {data-commentary-width=400}
+### How pitch makes Bohemian Rhapsody number 1 {.storyboard, data-commentary-width=400}
 
 ```{r}
 Bohemian <- 
@@ -374,7 +221,7 @@ ggplotly(Bohemian_chromagram)
 ***
 Let's first look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
 
-### Who Wants to Live Forever might be the saddest song in the TOP2000
+### Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard, data-commentary-width=400}
 
 #### Chromagram
 ```{r}
@@ -489,7 +336,7 @@ In the chromagram you can see that there is a lot of E, which can be explained b
 The cepstrogram gives more information about the timbre of this song. There is not too much variety in timbre, c02 is relatively yellow through almost the entire song, however c01 till c06 show some magnitude.
 The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
 
-### The rising star of the last decade: Fix You {data-commentary-width=400}
+### The rising star of the last decade: Fix You {.storyboard, data-commentary-width=400}
 
 #### Chromagram {data-commentary-width=400}
 ```{r}
@@ -601,4 +448,173 @@ The chromagram is evident with separately showing the chords that are being play
 There is not much variety of timbre in Fix You, as is shown in the cepstrogram. The highest magnitudes lie at C01 to C03 throughout the entire song. In the first half of the song there are lower magnitudes up till C08, however after approximately 150 seconds, in the second half of the song, only C06 is left of these.
 Even though the self-similarity matrix for pitch is not too clear, with the help of the self-similarity matrix for timbre there is still some information to get from it. The most obvious change in both matrices happens around 150 seconds, this is the moment the guitar solo starts. The self-similarity matrix for timbre shows another change about 30 seconds later, the moment the drums kick in. Although it's not very obvious, the self-similarity matrix reveal the repetition of the chorus with a chessboard-like pattern at 70-90 seconds, 130-150 seconds and 260-280 seconds.
 
-### Conclusion
+### Timbre in the Top 2000 {.storyboard, data-commentary-width=400}
+```{r}
+Top1999timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "55s8gstHcaCyfU47mQgLrB"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2009timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "2cjIvuw4VVOQSeUAZfNiqY"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2019timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "1MaaUHHVuXbmrDhoUCDDcL"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2022timbre <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "4U5UXciYphLDZAIgjdz50v"
+  ) |>
+  slice(1:100) |>
+  add_audio_analysis()
+Top2000timbre <-
+  bind_rows(
+   Top1999timbre |> mutate(year = "1999"),
+   Top2009timbre |> mutate(year = "2009"),
+   Top2019timbre |> mutate(year = "2019"),
+   Top2022timbre |> mutate(year = "2022")
+  )
+```
+
+```{r}
+Top2000timbre |>
+  mutate(
+    timbre =
+      map(
+        segments,
+        compmus_summarise,
+        timbre,
+        method = "mean"
+      )
+  ) |>
+  select(year, timbre) |>
+  compmus_gather_timbre() |>
+  ggplot(aes(x = basis, y = value, fill = year)) +
+  geom_violin() +
+  scale_fill_viridis_d() +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Year")
+```
+
+***
+This plot shows the timbre values from 3 years of the TOP 2000. Only the first 100 songs of the playlists are used for this plot. A few timbre coefficients show differences between the four years. For example c02, c04, c06 and c012. In c06 the year of 2009 stands out, the violin has a much longer shape compared to the other years. The same is true for c12 where 1999 has a longer and different shape than the other years. The violins of 2019 and 2022 are very alike for all of the timbre coefficients. This might be because there are only 3 years in between. It means that the first 100 songs in these playlists "sound" relatively the same.
+
+### Hey Jude {.storyboard, data-commentary-width=400}
+
+#### Keygram {data-commentary-width=400}
+```{r}
+Jude <-
+  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Jude |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+```
+
+***
+The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
+
+#### Chordogram {data-commentary-width=400}
+```{r}
+Jude2 <-
+  get_tidy_audio_analysis("1eT2CjXwFXNx6oY5ydvzKU") |>
+  compmus_align(bars, segments) |>
+  select(bars) |>
+  unnest(bars) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Jude2 |> 
+  compmus_match_pitch_template(
+    chord_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+```
+
+***
+The first chords of Hey Jude are clearly visible in the chordogram. These are F-maj, C-maj, F-maj and BB-maj. These chords aren't very surprising because they are the I, V and IV.
+
+### Loudness, tempo and duration {.storyboard, data-commentary-width=400}
+```{r}
+Top2000timbre |>
+  mutate(
+    sections =
+      map(
+        sections,                                    # sections or segments
+        summarise_at,
+        vars(tempo, loudness, duration),             # features of interest
+        list(section_mean = mean, section_sd = sd)   # aggregation functions
+      )
+  ) |>
+  unnest(sections) |>
+  ggplot(
+    aes(
+      x = tempo,
+      y = tempo_section_sd,
+      colour = year,
+      alpha = loudness,
+      text = track.name
+    )
+  ) +
+  geom_point(aes(size = duration / 60)) +
+  geom_rug() +
+  theme_light() +
+  ylim(0, 5) +
+  labs(
+    x = "Mean Tempo (bpm)",
+    y = "SD Tempo",
+    colour = "Year",
+    size = "Duration (min)",
+    alpha = "Volume (dBFS)"
+  )
+
+```
+
+***
+This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
+
+Conclusion
+=================================================

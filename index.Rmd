@@ -120,6 +120,65 @@ key_templates <-
   )
 ```
 
+NEW {.storyboard}
+===================================================
+
+### Rainbow in the Sky {.storyboard}
+```{r}
+Rainbow <- get_tidy_audio_analysis("2MlqP1HzhitHfFXPXKumdB")
+
+Rainbow |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+```
+
+***
+**What is a tempogram?**
+
+A tempogram shows the BPM of a song over time. In this case the yellow lines show the BPM at a certain point in the song. Sometimes there is more than one yellow line visible, these 'extra' lines are tempo octaves.
+
+**The tempogram of Rainbow in the Sky**
+
+This is a tempogram of Rainbow in the Sky by DJ Paul Elstak. The tempogram shows a straight line throughtout the entire song around 360 BPM. At around 10 seconds and 75 seconds there are other yellow dots visible for 180 BPM, these are the tempo octaves. At 120 and 150 seconds there are also 'extra' short yellow lines in the tempogram. I personally don't have a good explanation for these lines that appear around 210 BPM. Rainbow in the Sky is an electronic track in the genre of happy hardcore. This explains the straight line in the tempogram, the electronically created beats happen in a very steady pace.
+
+**Rainbow in the Sky in the TOP2000**
+
+Rainbow in the Sky was released in 1995 but only entered the TOP2000 in 2015 at no. 765. Since, the song has been gaining a few places each year. Last edition, in 2022, the song ended up at the highest position yet, no. 366.
+
+Positions of the song:
+
+1999: -, 2009: -, 2019: no. 386, 2022: no. 366
+
+### Killing in the Name {.storyboard}
+```{r}
+Killing <- get_tidy_audio_analysis("59WN2psjkt1tyaxjspN8fp")
+
+Killing |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic()
+```
+
+***
+**The tempogram of Killing in the Name**
+
+The tempogram of Killing in the Name by the band Rage Against the Machine looks very different compared to Rainbow in the Sky's tempogram. In this tempogram there is no straight yellow line. This means a few things. Firstly, Killing in the Name isn't an electronic track like Rainbow in the Sky. This means that the drummer needs to keep the exact same pace for some time, which can be hard. That makes the tempo in Killing in the Name automatically more dynamic and the yellow lines not as straight. A second reason for the bumpy lines could be the noise in the song. Everything in the song comes across as loud, the singing (or one could say almost screaming) and the lead guitar that has several solos for example. These parts don't have a very clear on beat tempo which might interfere with the tempo of the drums. The final reason for why there isn't a straight line, are the tempo changes. These changes are quite obvious when you listen to the song. A clear example of one of these changes is at 2 min. 25 (145 seconds). The song switches here from the chorus to the second verse. The chorus has strong vocals and a heavy guitar with a slightly faster beat than the verse which has the characteristic guitar riff with softer vocals.
+
+**Killing in the Name in the TOP2000**
+
+Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many years before its introduction to the TOP2000 in 2011. Although the song entered at a relatively low position (no. 1454), the song has kept a steady position in the years following: ranging between no. 94 and no. 48. 
+
+Positions of the song:
+
+1999: -, 2009: -, 2019: no. 60, 2022: no. 48
+
 What is the TOP2000?
 ===================================================
 
@@ -128,7 +187,7 @@ Column {data-width=500}
 
 ### What is the TOP2000?
 
-**What is the TOP 2000**
+**"The list of lists"**
 
 The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
 

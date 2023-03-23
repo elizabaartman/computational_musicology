@@ -15,6 +15,10 @@ library(tidyverse)
 library(spotifyr)
 library(compmus)
 library(plotly)
+library(tidymodels)
+library(ggdendro)
+library(heatmaply)
+library(gridExtra)
 ```
 
 ```{r}
@@ -120,65 +124,6 @@ key_templates <-
   )
 ```
 
-NEW {.storyboard}
-===================================================
-
-### Rainbow in the Sky {.storyboard}
-```{r}
-Rainbow <- get_tidy_audio_analysis("2MlqP1HzhitHfFXPXKumdB")
-
-Rainbow |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic()
-```
-
-***
-**What is a tempogram?**
-
-A tempogram shows the BPM of a song over time. In this case the yellow lines show the BPM at a certain point in the song. Sometimes there is more than one yellow line visible, these 'extra' lines are tempo octaves.
-
-**The tempogram of Rainbow in the Sky**
-
-This is a tempogram of Rainbow in the Sky by DJ Paul Elstak. The tempogram shows a straight line throughtout the entire song around 360 BPM. At around 10 seconds and 75 seconds there are other yellow dots visible for 180 BPM, these are the tempo octaves. At 120 and 150 seconds there are also 'extra' short yellow lines in the tempogram. I personally don't have a good explanation for these lines that appear around 210 BPM. Rainbow in the Sky is an electronic track in the genre of happy hardcore. This explains the straight line in the tempogram, the electronically created beats happen in a very steady pace.
-
-**Rainbow in the Sky in the TOP2000**
-
-Rainbow in the Sky was released in 1995 but only entered the TOP2000 in 2015 at no. 765. Since, the song has been gaining a few places each year. Last edition, in 2022, the song ended up at the highest position yet, no. 366.
-
-Positions of the song:
-
-1999: -, 2009: -, 2019: no. 386, 2022: no. 366
-
-### Killing in the Name {.storyboard}
-```{r}
-Killing <- get_tidy_audio_analysis("59WN2psjkt1tyaxjspN8fp")
-
-Killing |>
-  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
-  ggplot(aes(x = time, y = bpm, fill = power)) +
-  geom_raster() +
-  scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic()
-```
-
-***
-**The tempogram of Killing in the Name**
-
-The tempogram of Killing in the Name by the band Rage Against the Machine looks very different compared to Rainbow in the Sky's tempogram. In this tempogram there is no straight yellow line. This means a few things. Firstly, Killing in the Name isn't an electronic track like Rainbow in the Sky. This means that the drummer needs to keep the exact same pace for some time, which can be hard. That makes the tempo in Killing in the Name automatically more dynamic and the yellow lines not as straight. A second reason for the bumpy lines could be the noise in the song. Everything in the song comes across as loud, the singing (or one could say almost screaming) and the lead guitar that has several solos for example. These parts don't have a very clear on beat tempo which might interfere with the tempo of the drums. The final reason for why there isn't a straight line, are the tempo changes. These changes are quite obvious when you listen to the song. A clear example of one of these changes is at 2 min. 25 (145 seconds). The song switches here from the chorus to the second verse. The chorus has strong vocals and a heavy guitar with a slightly faster beat than the verse which has the characteristic guitar riff with softer vocals.
-
-**Killing in the Name in the TOP2000**
-
-Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many years before its introduction to the TOP2000 in 2011. Although the song entered at a relatively low position (no. 1454), the song has kept a steady position in the years following: ranging between no. 94 and no. 48. 
-
-Positions of the song:
-
-1999: -, 2009: -, 2019: no. 60, 2022: no. 48
-
 What is the TOP2000?
 ===================================================
 
@@ -191,14 +136,14 @@ Column {data-width=500}
 
 The TOP2000 is a Dutch radio programme by radio station NPO radio 2. From Christmas Day until midnight of New Year's Eve, a list of 2000 songs that are considered the "most popular songs of all time", is broadcasted. The list, constructed by votes from the audience, was first on air in 1999 to celebrate the new millennium. Due to the success of the show, the radio station decided to make it an annual programme. In the following years, the TOP2000 grew out to become a yearly tradition for many households.
 
-The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. This causes more recent hits making it to the list (see statistics [here](https://www.nporadio2.nl/top2000/statistieken)) and most likely making the list conform to its time. What exactly are the differences between the list throughout the years?
+The list of 2000 songs has changed over the years with new songs entering the TOP2000 and other songs not making it to the final cut. New generations of kids grew up listening to the show with their parents and are voting on their favourite songs now too. More recent hits are making it to the list every year (see statistics [here](https://www.nporadio2.nl/top2000/statistieken)) and most likely making the list conform to its time. What exactly are the differences between the list throughout the years and has the sound of the TOP2000 changed over the past 23 years?
 
 
 **The TOP 2000 of 1999, 2009, 2019 and 2022**
 
-The corpus consists of four playlists: the TOP2000 list from 1999, 2009, and 2019. The 2000 songs that should be included can be found on the NPO radio 2 website. I am using one already existing playlists on Spotify that I have checked on accuracy, the other two playlists I have created myself. Even though the playlists are carefully constructed, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs, 2009 has 1982 songs and the list from 2019 contains 1993 songs. The amount of songs missing is only limited and should therefore not cause too many problems for the data analysis.
+The corpus consists of four playlists: the TOP2000 list from 1999, 2009, 2019 and 2022. The 2000 songs that should be included can be found on the NPO radio 2 [website](https://www.nporadio2.nl/top2000). I am using two already existing playlists on Spotify that I have checked on accuracy, the other two playlists I have created myself. Even though the playlists are carefully constructed, there are a few songs missing. This is not the fault of the creator, Spotify simply doesn't have the songs in its library. This results in the list from 1999 containing a total of 1976 songs, 2009 has 1982 songs, the list from 2019 contains 1993 songs and 2022 has the most with 1999 songs. The amount of songs missing is limited and should therefore not cause too many problems for the data analysis.
 
-An example of a song that is remarkable in the TOP2000 from 2019 is Danny Vera's Rollercoaster. The song entered the list in this year, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place.
+An example of a song that is remarkable in the TOP2000 is Danny Vera's Roller Coaster. The song entered the list in 2019, immediately making it to the 4th place. Ever since it has been in the top 3 which has not happened with other songs before. If we look at the TOP2000 of 1999 it is interesting to see that Avond by Boudewijn de Groot was only placed at 428. The song has grown in popularity because it now has positioned itself on the 8th place. I expect that newly released songs like Roller Coaster and songs gaining a lot more popularity over time like for example Avond have changed the general sound of the TOP2000 over its years. 
 
 Column {data-width=250}
 ---------------------------------------------------
@@ -221,7 +166,7 @@ Column {data-width=250}
 Visualisations {.storyboard}
 ==================================================
 
-### Overview of relation between valence, danceability and mode in TOP 2000 {.storyboard}
+### Overview of relation between valence, danceability and mode in TOP 2000 {.storyboard, data-commentary-width=400}
 
 ```{r}
 Top2000_scatter <- Top2000lists |> 
@@ -258,7 +203,7 @@ ggplotly(Top2000_scatter)
 ***
 In this scatter plot you can see the relation between valence, danceability and mode in the TOP2000.
 
-### How pitch makes Bohemian Rhapsody number 1 {.storyboard}
+### Chromagrams: How pitch makes Bohemian Rhapsody number 1 {.storyboard, data-commentary-width=400}
 
 ```{r}
 Bohemian <- 
@@ -281,25 +226,18 @@ Bohemian_chromagram <- Bohemian |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c() +
+  ggtitle("Bohemian Rhapsody")
 
 ggplotly(Bohemian_chromagram)
-```
 
-***
-Let's first look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000. From the first year onwards it has been number 1 for almost all years. What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
-
-### Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard}
-
-#### Chromagram
-```{r}
-WWTLF1 <- 
-  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
+Brel <- 
+  get_tidy_audio_analysis("6IRA4KOVbtiGiTdYoEThJN") |>
   select(segments) |>
   unnest(segments) |>
   select(start, duration, pitches)
 
-WWTLF1_chromagram <- WWTLF1 |>
+Brel_chromagram <- Brel |>
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
   compmus_gather_chroma() |> 
   ggplot(
@@ -313,101 +251,12 @@ WWTLF1_chromagram <- WWTLF1 |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c() +
+  ggtitle("Ne Me Quitte Pas")
 
-ggplotly(WWTLF1_chromagram)
-```
+ggplotly(Brel_chromagram)
 
-#### Cepstrogram
-```{r}
-WWTLF2 <-
-  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
-  compmus_align(bars, segments) |>                     # Change `bars`
-  select(bars) |>                                      #   in all three
-  unnest(bars) |>                                      #   of these lines.
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  ) |>
-  mutate(
-    timbre =
-      map(segments,
-        compmus_summarise, timbre,
-        method = "rms", norm = "euclidean"              # Change summary & norm.
-      )
-  )
 
-WWTLF2_cepstrogram <- WWTLF2 |>
-  compmus_gather_timbre() |>
-  ggplot(
-    aes(
-      x = start + duration / 2,
-      width = duration,
-      y = basis,
-      fill = value
-    )
-  ) +
-  geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
-  scale_fill_viridis_c() +                              
-  theme_classic()
-
-ggplotly(WWTLF2_cepstrogram)
-```
-
-#### Self-Similarity Matrix Pitch
-```{r}
-WWTLF1 |>
-  compmus_self_similarity(pitches, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-#### Self-Similarity Matrix Timbre
-```{r}
-WWTLF2 |>
-  compmus_self_similarity(timbre, "cosine") |> 
-  ggplot(
-    aes(
-      x = xstart + xduration / 2,
-      width = xduration,
-      y = ystart + yduration / 2,
-      height = yduration,
-      fill = d
-    )
-  ) +
-  geom_tile() +
-  coord_fixed() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_classic() +
-  labs(x = "", y = "")
-```
-
-***
-Another interesting song by Queen in the TOP2000 is Who Wants to Live Forever. This song turned out to be an outlier in the scatter plot by having a low valence score and a low danceability score. That makes the song perhaps the saddest in the TOP2000. From the chromagram, cepstrogram and the two self-similarity matrices it becomes more clear how the song is built. 
-In the chromagram you can see that there is a lot of E, which can be explained by the key of the song. The E-minor scale consists of E F# G A B C D, therefore it is no surprise that the chromagram shows a higher magnitude for these tones.
-The cepstrogram gives more information about the timbre of this song. There is not too much variety in timbre, c02 is relatively yellow through almost the entire song, however c01 till c06 show some magnitude.
-The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
-
-### The rising star of the last decade: Fix You {.storyboard}
-
-#### Chromagram {data-commentary-width=400}
-```{r}
 FixYou1 <- 
   get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
   select(segments) |>
@@ -428,15 +277,76 @@ FixYou1_chromagram <- FixYou1 |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c() +
+  ggtitle("Fix You")
 
 ggplotly(FixYou1_chromagram)
+
+
+Ramses <- 
+  get_tidy_audio_analysis("4WCySsw36GzONhLAaBtn2g") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+Ramses_chromagram <- Ramses |>
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) |>
+  compmus_gather_chroma() |> 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c() +
+  ggtitle("Zing - Vecht - Huil - Bid - Lach - Werk En Bewonder")
+
+ggplotly(Ramses_chromagram)
+
+grid.arrange(Bohemian_chromagram, Brel_chromagram, FixYou1_chromagram, Ramses_chromagram, ncol = 2, nrow = 2)
 ```
 
-#### Cepstrogram {data-commentary-width=400}
+***
+**What is a chromagram?**
+
+Explain what a chromagram is
+
+**Bohemian Rhapsody in the TOP2000**
+Let's first take a look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000 because of its position in the list. From the first year onwards it has been on number 1 for almost all years. In 2005, 2010, 2014, 2015 and 2020 the song was beaten by either Avond, Hotel California, Imagine or Roller Coaster, however Bohemian Rhapsody still secured a runner up position.
+
+**The chromagram of Bohemian Rhapsody**
+
+What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
+
+**The rising star of the last decade: Fix You**
+Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
+The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
+
+Positions of Bohemian Rhapsody: 1999: no. 1, 2009: no. 1, 2019: no. 1, 2022: no. 1
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4u7EnebtmKWzUH433cf5Qv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Ne Me Quitte Pas: 1999: no. 66, 2009: no. 94, 2019: no. 415, 2022: no. 244
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6IRA4KOVbtiGiTdYoEThJN?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Fix You: 1999: -, 2009: no. 1494, 2019: no. 8, 2022: no. 5
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7LVHVU3tWfcxj5aiPFEW4Q?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Zing - Vecht - Huil - Bid - Lach - Werk en Bewonder: 1999: no. 297, 2009: no. 7, 2019: no. 167, 2022: no. 319
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4WCySsw36GzONhLAaBtn2g?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Cepstrograms: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard, data-commentary-width=400}
 ```{r}
-FixYou2 <-
-  get_tidy_audio_analysis("7LVHVU3tWfcxj5aiPFEW4Q") |>
+Goldband <-
+  get_tidy_audio_analysis("2LcmbuYX7tyR4DWy3b273L") |>
   compmus_align(bars, segments) |>                     # Change `bars`
   select(bars) |>                                      #   in all three
   unnest(bars) |>                                      #   of these lines.
@@ -455,7 +365,7 @@ FixYou2 <-
       )
   )
 
-FixYou2_cepstrogram <- FixYou2 |>
+Goldband_cepstrogram <- Goldband |>
   compmus_gather_timbre() |>
   ggplot(
     aes(
@@ -468,14 +378,172 @@ FixYou2_cepstrogram <- FixYou2 |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   scale_fill_viridis_c() +                              
-  theme_classic()
+  theme_classic() +
+  ggtitle("Noodgeval")
 
-ggplotly(FixYou2_cepstrogram)
+ggplotly(Goldband_cepstrogram)
+
+
+Summertime <-
+  get_tidy_audio_analysis("4DBZvNW9wB1vHzzRcFbDZF") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+Summertime_cepstrogram <- Summertime |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  ggtitle("Summertime")
+
+ggplotly(Summertime_cepstrogram)
+
+
+Nirvana <-
+  get_tidy_audio_analysis("11LmqTE2naFULdEP94AUBa") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+Nirvana_cepstrogram <- Nirvana |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  ggtitle("Heart-Shaped Box")
+
+ggplotly(Nirvana_cepstrogram)
+
+
+DoeMaar <-
+  get_tidy_audio_analysis("46LNQvIkDX7hs0M466DD6h") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+DoeMaar_cepstrogram <- DoeMaar |>
+  compmus_gather_timbre() |>
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = basis,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  scale_fill_viridis_c() +                              
+  theme_classic() +
+  ggtitle("Belle Hélène")
+
+ggplotly(DoeMaar_cepstrogram)
+
+grid.arrange(Goldband_cepstrogram, Summertime_cepstrogram, Nirvana_cepstrogram, DoeMaar_cepstrogram, ncol = 2, nrow = 2)
 ```
 
-#### Self-Similarity Matrix Pitch {data-commentary-width=400}
+***
+**What is a cepstrogram?**
+
+Explain what a chromagram is
+
+**Bohemian Rhapsody in the TOP2000**
+Let's first take a look at Bohemian Rhapsody by Queen. This is definitely an interesting song in the TOP2000 because of its position in the list. From the first year onwards it has been on number 1 for almost all years. In 2005, 2010, 2014, 2015 and 2020 the song was beaten by either Avond, Hotel California, Imagine or Roller Coaster, however Bohemian Rhapsody still secured a runner up position.
+
+**The chromagram of Bohemian Rhapsody**
+What makes the song so great? If we look at pitch in the form of the chromagram we can perhaps see why. The song is in three different keys. It starts in the key of Bb in the verse, which becomes very clear by the yellow stripes in the chromagram. Another important moment in the song is the so-called 'opera'-part. This happens around 3 minutes, (or 180 seconds) and is visible in the chromagram if you look at the greener area in the key of A. The greener area in A can be explained because this part is starting in A-major and the part modulates back and forth to this key. The song ends in the key of Eb, hence the yellow area around 330s. In general, you could say this song is all over the place pitch-wise because it is changing key often (I have only outlined the big changes, a lot more is happening!).
+
+**The rising star of the last decade: Fix You**
+Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
+The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
+
+Positions of Noodgeval: 1999:-, 2009: -, 2019: -, 2022: no. 55
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2LcmbuYX7tyR4DWy3b273L?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Summertime: 1999: no. 562, 2009: no. 1293, 2019: -, 2022: -
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4DBZvNW9wB1vHzzRcFbDZF?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Heart-Shaped Box: 1999: -, 2009: -, 2019: no. 1019, 2022: no. 797
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/11LmqTE2naFULdEP94AUBa?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Belle Hélène: 1999: -, 2009: no. 1165, 2019: no. 928, 2022: no. 516
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/46LNQvIkDX7hs0M466DD6h?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+
+### Self-similarity Matrices: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard, data-commentary-width=400}
 ```{r}
-FixYou1 |>
+Queen <- 
+  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+Queen_selfsimilarity <- Queen |>
   compmus_self_similarity(pitches, "cosine") |> 
   ggplot(
     aes(
@@ -490,9 +558,30 @@ FixYou1 |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "")
+  labs(x = "", y = "") +
+  ggtitle("Pitch Who Wants To Live Forever")
 
-FixYou2 |>
+Queen1 <-
+  get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+Queen1_selfsimilarity <- Queen1 |>
   compmus_self_similarity(timbre, "cosine") |> 
   ggplot(
     aes(
@@ -507,16 +596,315 @@ FixYou2 |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "")
+  labs(x = "", y = "") +
+  ggtitle("Timbre Who Wants To Live Forever")
+
+
+Hallelujah <- 
+  get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM") |>
+  select(segments) |>
+  unnest(segments) |>
+  select(start, duration, pitches)
+
+Hallelujah_selfsimilarity <- Hallelujah |>
+  compmus_self_similarity(pitches, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") +
+  ggtitle("Pitch Hallelujah")
+
+Hallelujah1 <-
+  get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM") |>
+  compmus_align(bars, segments) |>                     # Change `bars`
+  select(bars) |>                                      #   in all three
+  unnest(bars) |>                                      #   of these lines.
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  ) |>
+  mutate(
+    timbre =
+      map(segments,
+        compmus_summarise, timbre,
+        method = "rms", norm = "euclidean"              # Change summary & norm.
+      )
+  )
+
+Hallelujah1_selfsimilarity <- Hallelujah1 |>
+  compmus_self_similarity(timbre, "cosine") |> 
+  ggplot(
+    aes(
+      x = xstart + xduration / 2,
+      width = xduration,
+      y = ystart + yduration / 2,
+      height = yduration,
+      fill = d
+    )
+  ) +
+  geom_tile() +
+  coord_fixed() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_classic() +
+  labs(x = "", y = "") +
+  ggtitle("Timbre Hallelujah")
+
+grid.arrange(Queen_selfsimilarity, Queen1_selfsimilarity, Hallelujah_selfsimilarity, Hallelujah1_selfsimilarity, ncol = 2, nrow = 2)
 ```
 
 ***
-Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
-The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
-There is not much variety of timbre in Fix You, as is shown in the cepstrogram. The highest magnitudes lie at C01 to C03 throughout the entire song. In the first half of the song there are lower magnitudes up till C08, however after approximately 150 seconds, in the second half of the song, only C06 is left of these.
-Even though the self-similarity matrix for pitch is not too clear, with the help of the self-similarity matrix for timbre there is still some information to get from it. The most obvious change in both matrices happens around 150 seconds, this is the moment the guitar solo starts. The self-similarity matrix for timbre shows another change about 30 seconds later, the moment the drums kick in. Although it's not very obvious, the self-similarity matrix reveal the repetition of the chorus with a chessboard-like pattern at 70-90 seconds, 130-150 seconds and 260-280 seconds.
+Another interesting song by Queen in the TOP2000 is Who Wants to Live Forever. This song turned out to be an outlier in the scatter plot by having a low valence score and a low danceability score. That makes the song perhaps the saddest in the TOP2000. From the chromagram, cepstrogram and the two self-similarity matrices it becomes more clear how the song is built. 
+In the chromagram you can see that there is a lot of E, which can be explained by the key of the song. The E-minor scale consists of E F# G A B C D, therefore it is no surprise that the chromagram shows a higher magnitude for these tones.
+The cepstrogram gives more information about the timbre of this song. There is not too much variety in timbre, c02 is relatively yellow through almost the entire song, however c01 till c06 show some magnitude.
+The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
 
-### Timbre in the Top 2000 {.storyboard}
+Positions of Who Wants To Live Forever: 1999: no. 30, 2009: no. 77, 2019: no. 74, 2022: no. 101
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3SGP8It5WDnCONyApJKRTJ?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Hallelujah: 1999: -, 2009: no. 51, 2019: no. 183, 2022: no. 335
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3pRaLNL3b8x5uBOcsgvdqM?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Keygrams: Hey Jude {.storyboard, data-commentary-width=400}
+
+```{r}
+Jude <-
+  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Jude_keygram <- Jude |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("Hey Jude")
+
+Floor <-
+  get_tidy_audio_analysis("6ZJ7gv4YmbFAHCHMwsB8ZL") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Floor_keygram <- Floor |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("Phantom Of The Opera")
+
+
+Genesis <-
+  get_tidy_audio_analysis("7bkjJHsfX2rebJ3KZLegGt") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Genesis_keygram <- Genesis |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("Invisible Touch")
+
+
+Backstreet <-
+  get_tidy_audio_analysis("47BBI51FKFwOMlIiX6m8ya") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+Backstreet_keygram <- Backstreet |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "euclidean",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "") +
+  ggtitle("I Want It That Way")
+
+grid.arrange(Jude_keygram, Floor_keygram, Genesis_keygram, Backstreet_keygram, ncol = 2, nrow = 2)
+```
+
+***
+The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
+
+Positions of Hey Jude: 1999: no. 11, 2009: no. 23, 2019: no. 72, 2022: no. 130
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1eT2CjXwFXNx6oY5ydvzKU?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Phantom Of The Opera: 1999: -, 2009: -, 2019: no. 1322, 2022: no. 68
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6ZJ7gv4YmbFAHCHMwsB8ZL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Invisible Touch: 1999: -, 2009: no. 1738, 2019: no. 1982, 2022: no. 130
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7bkjJHsfX2rebJ3KZLegGt?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of I Want It That Way: 1999: -, 2009: no. 1569, 2019: no. 1014, 2022: no. 910
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1di1BEgJYzPvXUuinsYJGP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Tempograms: Rainbow in the Sky and Killing in the Name {.storyboard, data-commentary-width=400}
+```{r}
+Rainbow <- get_tidy_audio_analysis("2MlqP1HzhitHfFXPXKumdB")
+
+Rainbow_tempogram <- Rainbow |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() +
+  ggtitle("Rainbow In The Sky")
+
+Killing <- get_tidy_audio_analysis("59WN2psjkt1tyaxjspN8fp")
+
+Killing_tempogram <- Killing |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() +
+  ggtitle("Killing In The Name")
+
+Adele <- get_tidy_audio_analysis("5mFMb5OHI3cN0UjITVztCj")
+
+Adele_tempogram <- Adele |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() +
+  ggtitle("Rumour Has It")
+
+Radiohead <- get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM")
+
+Radiohead_tempogram <- Radiohead |>
+  tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
+  ggplot(aes(x = time, y = bpm, fill = power)) +
+  geom_raster() +
+  scale_fill_viridis_c(guide = "none") +
+  labs(x = "Time (s)", y = "Tempo (BPM)") +
+  theme_classic() +
+  ggtitle("Paranoid Android")
+
+grid.arrange(Rainbow_tempogram, Killing_tempogram, Adele_tempogram, Radiohead_tempogram, ncol = 2, nrow = 2)
+```
+
+***
+**What is a tempogram?**
+
+A tempogram shows the BPM of a song over time. In this case the yellow lines show the BPM at a certain point in the song. Sometimes there is more than one yellow line visible, these 'extra' lines are tempo octaves.
+
+**The tempogram of Rainbow in the Sky**
+
+This is a tempogram of Rainbow in the Sky by DJ Paul Elstak. The tempogram shows a straight line throughtout the entire song around 360 BPM. At around 10 seconds and 75 seconds there are other yellow dots visible for 180 BPM, these are the tempo octaves. At 120 and 150 seconds there are also 'extra' short yellow lines in the tempogram. I personally don't have a good explanation for these lines that appear around 210 BPM. Rainbow in the Sky is an electronic track in the genre of happy hardcore. This explains the straight line in the tempogram, the electronically created beats happen in a very steady pace.
+
+**Rainbow in the Sky in the TOP2000**
+
+Rainbow in the Sky was released in 1995 but only entered the TOP2000 in 2015 at no. 765. Since, the song has been gaining a few places each year. Last edition, in 2022, the song ended up at the highest position yet, no. 366.
+
+**The tempogram of Killing in the Name**
+
+The tempogram of Killing in the Name by the band Rage Against the Machine looks very different compared to Rainbow in the Sky's tempogram. In this tempogram there is no straight yellow line. This means a few things. Firstly, Killing in the Name isn't an electronic track like Rainbow in the Sky. This means that the drummer needs to keep the exact same pace for some time, which can be hard. That makes the tempo in Killing in the Name automatically more dynamic and the yellow lines not as straight. A second reason for the bumpy lines could be the noise in the song. Everything in the song comes across as loud, the singing (or one could say almost screaming) and the lead guitar that has several solos for example. These parts don't have a very clear on beat tempo which might interfere with the tempo of the drums. The final reason for why there isn't a straight line, are the tempo changes. These changes are quite obvious when you listen to the song. A clear example of one of these changes is at 2 min. 25 (145 seconds). The song switches here from the chorus to the second verse. The chorus has strong vocals and a heavy guitar with a slightly faster beat than the verse which has the characteristic guitar riff with softer vocals.
+
+**Killing in the Name in the TOP2000**
+
+Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many years before its introduction to the TOP2000 in 2011. Although the song entered at a relatively low position (no. 1454), the song has kept a steady position in the years following: ranging between no. 94 and no. 48. 
+
+Positions of Rainbow in the Sky: 1999: -, 2009: -, 2019: no. 386, 2022: no. 366
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2MlqP1HzhitHfFXPXKumdB?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Killing in the name: 1999: -, 2009: -, 2019: no. 60, 2022: no. 48
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/59WN2psjkt1tyaxjspN8fp?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Rumour Has It: 1999: -, 2009: -, 2019: no. 1377, 2022: no. 1627
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/50yHVBbU6M4iIfqBI1bxWx?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+Positions of Paranoid Android: 1999: -, 2009: -, 2019: no. 342, 2022: no. 423
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2nTsKOXIVGDf2iPeVQO2Gm?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+
+### Timbre in the Top 2000 {.storyboard, data-commentary-width=400}
 ```{r}
 Top1999timbre <-
   get_playlist_audio_features(
@@ -577,75 +965,7 @@ Top2000timbre |>
 ***
 This plot shows the timbre values from 3 years of the TOP 2000. Only the first 100 songs of the playlists are used for this plot. A few timbre coefficients show differences between the four years. For example c02, c04, c06 and c012. In c06 the year of 2009 stands out, the violin has a much longer shape compared to the other years. The same is true for c12 where 1999 has a longer and different shape than the other years. The violins of 2019 and 2022 are very alike for all of the timbre coefficients. This might be because there are only 3 years in between. It means that the first 100 songs in these playlists "sound" relatively the same.
 
-### Hey Jude {.storyboard}
-
-#### Keygram {data-commentary-width=400}
-```{r}
-Jude <-
-  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
-  compmus_align(sections, segments) |>
-  select(sections) |>
-  unnest(sections) |>
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-Jude |> 
-  compmus_match_pitch_template(
-    key_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "")
-```
-
-***
-The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
-
-#### Chordogram {data-commentary-width=400}
-```{r}
-Jude2 <-
-  get_tidy_audio_analysis("1eT2CjXwFXNx6oY5ydvzKU") |>
-  compmus_align(bars, segments) |>
-  select(bars) |>
-  unnest(bars) |>
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-Jude2 |> 
-  compmus_match_pitch_template(
-    chord_templates,         # Change to chord_templates if descired
-    method = "euclidean",  # Try different distance metrics
-    norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "")
-```
-
-***
-The first chords of Hey Jude are clearly visible in the chordogram. These are F-maj, C-maj, F-maj and BB-maj. These chords aren't very surprising because they are the I, V and IV.
-
-### Loudness, tempo and duration {.storyboard}
+### Loudness, tempo and duration {.storyboard, data-commentary-width=400}}
 ```{r}
 Top2000timbre |>
   mutate(
@@ -684,5 +1004,76 @@ Top2000timbre |>
 ***
 This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
 
+### Dendrogram TOP2000 {.storyboard, data-commentary-width=400}
+
+```{r}
+halloween <-
+  get_playlist_audio_features("zzz", "3M2ZZn1ySwVAczqLxzPBdI") |>
+  add_audio_analysis() |>
+  mutate(
+    segments = map2(segments, key, compmus_c_transpose),
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      ),
+    timbre =
+      map(
+        segments,
+        compmus_summarise, timbre,
+        method = "mean"
+      )
+  ) |>
+  mutate(pitches = map(pitches, compmus_normalise, "clr")) |>
+  mutate_at(vars(pitches, timbre), map, bind_rows) |>
+  unnest(cols = c(pitches, timbre))
+
+halloween_juice <-
+  recipe(
+    track.name ~
+      danceability +
+      energy +
+      loudness +
+      speechiness +
+      acousticness +
+      instrumentalness +
+      liveness +
+      valence +
+      tempo +
+      duration +
+      C + `C#|Db` + D + `D#|Eb` +
+      E + `F` + `F#|Gb` + G +
+      `G#|Ab` + A + `A#|Bb` + B +
+      c01 + c02 + c03 + c04 + c05 + c06 +
+      c07 + c08 + c09 + c10 + c11 + c12,
+    data = halloween
+  ) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |> 
+  # step_range(all_predictors()) |> 
+  prep(halloween |> mutate(track.name = str_trunc(track.name, 20))) |>
+  juice() |>
+  column_to_rownames("track.name")
+
+halloween_dist <- dist(halloween_juice, method = "euclidean")
+
+halloween_dist |> 
+  hclust(method = "average") |> # Try single, average, and complete.
+  dendro_data() |>
+  ggdendrogram()
+```
+```{r}
+heatmaply(
+  halloween_juice,
+  hclustfun = hclust,
+  hclust_method = "average",  # Change for single, average, or complete linkage.
+  dist_method = "euclidean"
+)
+```
+
 Conclusion
 =================================================
+
+
+
+

@@ -18,7 +18,7 @@ library(plotly)
 library(tidymodels)
 library(ggdendro)
 library(heatmaply)
-library(gridExtra)
+library(cowplot)
 ```
 
 ```{r}
@@ -166,7 +166,7 @@ Column {data-width=250}
 Visualisations {.storyboard}
 ==================================================
 
-### Overview of relation between valence, danceability and mode in TOP 2000 {.storyboard, data-commentary-width=400}
+### Overview of relation between valence, danceability and mode in TOP 2000 {.storyboard}
 
 ```{r}
 Top2000_scatter <- Top2000lists |> 
@@ -203,8 +203,7 @@ ggplotly(Top2000_scatter)
 ***
 In this scatter plot you can see the relation between valence, danceability and mode in the TOP2000.
 
-### Chromagrams: How pitch makes Bohemian Rhapsody number 1 {.storyboard, data-commentary-width=400}
-
+### Chromagrams: How pitch makes Bohemian Rhapsody number 1 {.storyboard}
 ```{r}
 Bohemian <- 
   get_tidy_audio_analysis("4u7EnebtmKWzUH433cf5Qv") |>
@@ -224,12 +223,10 @@ Bohemian_chromagram <- Bohemian |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Bohemian Rhapsody (Queen)") +
   theme_minimal() +
-  scale_fill_viridis_c() +
-  ggtitle("Bohemian Rhapsody")
+  scale_fill_viridis_c()
 
-ggplotly(Bohemian_chromagram)
 
 Brel <- 
   get_tidy_audio_analysis("6IRA4KOVbtiGiTdYoEThJN") |>
@@ -249,12 +246,9 @@ Brel_chromagram <- Brel |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Ne Me Quitte Pas (Jacques Brel)") +
   theme_minimal() +
-  scale_fill_viridis_c() +
-  ggtitle("Ne Me Quitte Pas")
-
-ggplotly(Brel_chromagram)
+  scale_fill_viridis_c()
 
 
 FixYou1 <- 
@@ -275,12 +269,9 @@ FixYou1_chromagram <- FixYou1 |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Fix You (Coldplay)") +
   theme_minimal() +
-  scale_fill_viridis_c() +
-  ggtitle("Fix You")
-
-ggplotly(FixYou1_chromagram)
+  scale_fill_viridis_c()
 
 
 Ramses <- 
@@ -301,14 +292,11 @@ Ramses_chromagram <- Ramses |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Zing - Vecht - Huil - Bid - Lach - Werk En Bewonder (Ramses Shaffy)") +
   theme_minimal() +
-  scale_fill_viridis_c() +
-  ggtitle("Zing - Vecht - Huil - Bid - Lach - Werk En Bewonder")
+  scale_fill_viridis_c()
 
-ggplotly(Ramses_chromagram)
-
-grid.arrange(Bohemian_chromagram, Brel_chromagram, FixYou1_chromagram, Ramses_chromagram, ncol = 2, nrow = 2)
+plot_grid(Bohemian_chromagram, Brel_chromagram, FixYou1_chromagram, Ramses_chromagram, ncol = 2, nrow = 2)
 ```
 
 ***
@@ -327,23 +315,15 @@ What makes the song so great? If we look at pitch in the form of the chromagram 
 Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
 The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
 
-Positions of Bohemian Rhapsody: 1999: no. 1, 2009: no. 1, 2019: no. 1, 2022: no. 1
+Positions of [Bohemian Rhapsody](https://open.spotify.com/track/4u7EnebtmKWzUH433cf5Qv?si=3de371f1a98e43a4): 1999: no. 1, 2009: no. 1, 2019: no. 1, 2022: no. 1
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4u7EnebtmKWzUH433cf5Qv?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Ne Me Quitte Pas](https://open.spotify.com/track/6IRA4KOVbtiGiTdYoEThJN?si=767af0c0a0b14ce4): 1999: no. 66, 2009: no. 94, 2019: no. 415, 2022: no. 244
 
-Positions of Ne Me Quitte Pas: 1999: no. 66, 2009: no. 94, 2019: no. 415, 2022: no. 244
+Positions of [Fix You](https://open.spotify.com/track/7LVHVU3tWfcxj5aiPFEW4Q?si=e5956007578143f6): 1999: -, 2009: no. 1494, 2019: no. 8, 2022: no. 5
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6IRA4KOVbtiGiTdYoEThJN?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Zing - Vecht - Huil - Bid - Lach - Werk en Bewonder](https://open.spotify.com/track/4WCySsw36GzONhLAaBtn2g?si=e9f401df5af54e4e): 1999: no. 297, 2009: no. 7, 2019: no. 167, 2022: no. 319
 
-Positions of Fix You: 1999: -, 2009: no. 1494, 2019: no. 8, 2022: no. 5
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7LVHVU3tWfcxj5aiPFEW4Q?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Positions of Zing - Vecht - Huil - Bid - Lach - Werk en Bewonder: 1999: no. 297, 2009: no. 7, 2019: no. 167, 2022: no. 319
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4WCySsw36GzONhLAaBtn2g?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-### Cepstrograms: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard, data-commentary-width=400}
+### Cepstrograms: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard}
 ```{r}
 Goldband <-
   get_tidy_audio_analysis("2LcmbuYX7tyR4DWy3b273L") |>
@@ -376,12 +356,9 @@ Goldband_cepstrogram <- Goldband |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Noodgeval (Goldband)") +
   scale_fill_viridis_c() +                              
-  theme_classic() +
-  ggtitle("Noodgeval")
-
-ggplotly(Goldband_cepstrogram)
+  theme_classic()
 
 
 Summertime <-
@@ -415,12 +392,9 @@ Summertime_cepstrogram <- Summertime |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Summertime (Billie Holiday)") +
   scale_fill_viridis_c() +                              
-  theme_classic() +
-  ggtitle("Summertime")
-
-ggplotly(Summertime_cepstrogram)
+  theme_classic()
 
 
 Nirvana <-
@@ -454,12 +428,9 @@ Nirvana_cepstrogram <- Nirvana |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Heart-Shaped Box (Nirvana)") +
   scale_fill_viridis_c() +                              
-  theme_classic() +
-  ggtitle("Heart-Shaped Box")
-
-ggplotly(Nirvana_cepstrogram)
+  theme_classic()
 
 
 DoeMaar <-
@@ -493,14 +464,12 @@ DoeMaar_cepstrogram <- DoeMaar |>
     )
   ) +
   geom_tile() +
-  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Belle Hélène (Doe Maar)") +
   scale_fill_viridis_c() +                              
-  theme_classic() +
-  ggtitle("Belle Hélène")
+  theme_classic()
 
-ggplotly(DoeMaar_cepstrogram)
 
-grid.arrange(Goldband_cepstrogram, Summertime_cepstrogram, Nirvana_cepstrogram, DoeMaar_cepstrogram, ncol = 2, nrow = 2)
+plot_grid(Goldband_cepstrogram, Summertime_cepstrogram, Nirvana_cepstrogram, DoeMaar_cepstrogram, ncol = 2, nrow = 2)
 ```
 
 ***
@@ -518,24 +487,16 @@ What makes the song so great? If we look at pitch in the form of the chromagram 
 Queen is not the only band in the TOP2000 who has a big impact on the list. Coldplay has turned out to also be a favourite over the past few years. Their song Fix You ended on the 5th place in the edition of 2022.
 The chromagram is evident with separately showing the chords that are being played at the start. The song begins with an organ that plays Eb Gm Cm7 Gb, as is also shown in the chromagram. From around 150 seconds these individually played chords fade away and make way for other patterns with a high magnitude at Eb, the key of the song.
 
-Positions of Noodgeval: 1999:-, 2009: -, 2019: -, 2022: no. 55
+Positions of [Noodgeval](https://open.spotify.com/track/2LcmbuYX7tyR4DWy3b273L?si=43377d5030724a6e): 1999:-, 2009: -, 2019: -, 2022: no. 55
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2LcmbuYX7tyR4DWy3b273L?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Summertime](https://open.spotify.com/track/4DBZvNW9wB1vHzzRcFbDZF?si=d2910d8b561f45ca): 1999: no. 562, 2009: no. 1293, 2019: -, 2022: -
 
-Positions of Summertime: 1999: no. 562, 2009: no. 1293, 2019: -, 2022: -
+Positions of [Heart-Shaped Box](https://open.spotify.com/track/11LmqTE2naFULdEP94AUBa?si=0ae9e02314974195): 1999: -, 2009: -, 2019: no. 1019, 2022: no. 797
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4DBZvNW9wB1vHzzRcFbDZF?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Positions of Heart-Shaped Box: 1999: -, 2009: -, 2019: no. 1019, 2022: no. 797
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/11LmqTE2naFULdEP94AUBa?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Positions of Belle Hélène: 1999: -, 2009: no. 1165, 2019: no. 928, 2022: no. 516
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/46LNQvIkDX7hs0M466DD6h?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Belle Hélène](https://open.spotify.com/track/46LNQvIkDX7hs0M466DD6h?si=d9e59785d8b841f5): 1999: -, 2009: no. 1165, 2019: no. 928, 2022: no. 516
 
 
-### Self-similarity Matrices: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard, data-commentary-width=400}
+### Self-similarity Matrices: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard}
 ```{r}
 Queen <- 
   get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
@@ -558,8 +519,7 @@ Queen_selfsimilarity <- Queen |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "") +
-  ggtitle("Pitch Who Wants To Live Forever")
+  labs(x = "", y = "", title = "Pitch Who Wants To Live Forever (Queen)")
 
 Queen1 <-
   get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
@@ -596,17 +556,16 @@ Queen1_selfsimilarity <- Queen1 |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "") +
-  ggtitle("Timbre Who Wants To Live Forever")
+  labs(x = "", y = "", title = "Timbre Who Wants To Live Forever (Queen)")
 
 
-Hallelujah <- 
-  get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM") |>
+ABBA <- 
+  get_tidy_audio_analysis("0GjEhVFGZW8afUYGChu3Rr") |>
   select(segments) |>
   unnest(segments) |>
   select(start, duration, pitches)
 
-Hallelujah_selfsimilarity <- Hallelujah |>
+ABBA_selfsimilarity <- ABBA |>
   compmus_self_similarity(pitches, "cosine") |> 
   ggplot(
     aes(
@@ -621,11 +580,10 @@ Hallelujah_selfsimilarity <- Hallelujah |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "") +
-  ggtitle("Pitch Hallelujah")
+  labs(x = "", y = "", title = "Pitch Dancing Queen (ABBA)")
 
-Hallelujah1 <-
-  get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM") |>
+ABBA1 <-
+  get_tidy_audio_analysis("0GjEhVFGZW8afUYGChu3Rr") |>
   compmus_align(bars, segments) |>                     # Change `bars`
   select(bars) |>                                      #   in all three
   unnest(bars) |>                                      #   of these lines.
@@ -644,7 +602,7 @@ Hallelujah1 <-
       )
   )
 
-Hallelujah1_selfsimilarity <- Hallelujah1 |>
+ABBA1_selfsimilarity <- ABBA1 |>
   compmus_self_similarity(timbre, "cosine") |> 
   ggplot(
     aes(
@@ -659,10 +617,9 @@ Hallelujah1_selfsimilarity <- Hallelujah1 |>
   coord_fixed() +
   scale_fill_viridis_c(guide = "none") +
   theme_classic() +
-  labs(x = "", y = "") +
-  ggtitle("Timbre Hallelujah")
+  labs(x = "", y = "", title = "Timbre Dancing Queen (ABBA)")
 
-grid.arrange(Queen_selfsimilarity, Queen1_selfsimilarity, Hallelujah_selfsimilarity, Hallelujah1_selfsimilarity, ncol = 2, nrow = 2)
+plot_grid(Queen_selfsimilarity, Queen1_selfsimilarity, ABBA_selfsimilarity, ABBA1_selfsimilarity, ncol = 2, nrow = 2)
 ```
 
 ***
@@ -671,19 +628,15 @@ In the chromagram you can see that there is a lot of E, which can be explained b
 The cepstrogram gives more information about the timbre of this song. There is not too much variety in timbre, c02 is relatively yellow through almost the entire song, however c01 till c06 show some magnitude.
 The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
 
-Positions of Who Wants To Live Forever: 1999: no. 30, 2009: no. 77, 2019: no. 74, 2022: no. 101
+Positions of [Who Wants To Live Forever](https://open.spotify.com/track/3SGP8It5WDnCONyApJKRTJ?si=dba1813eb9644cd7): 1999: no. 30, 2009: no. 77, 2019: no. 74, 2022: no. 101
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3SGP8It5WDnCONyApJKRTJ?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Dancing Queen](https://open.spotify.com/track/0GjEhVFGZW8afUYGChu3Rr?si=8e4e72e8444f442f): 1999: no. 16, 2009: no. 70, 2019: no. 68, 2022: no. 44
 
-Positions of Hallelujah: 1999: -, 2009: no. 51, 2019: no. 183, 2022: no. 335
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3pRaLNL3b8x5uBOcsgvdqM?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-### Keygrams: Hey Jude {.storyboard, data-commentary-width=400}
+### Keygrams: Hey Jude {.storyboard}
 
 ```{r}
-Jude <-
-  get_tidy_audio_analysis("3m7V717IKZqZLW5qUIOxdD") |>
+Beatles <-
+  get_tidy_audio_analysis("5dfvhl9mJqgMVLNm3LAMnG") |>
   compmus_align(sections, segments) |>
   select(sections) |>
   unnest(sections) |>
@@ -695,7 +648,7 @@ Jude <-
       )
   )
 
-Jude_keygram <- Jude |> 
+Beatles_keygram <- Beatles |> 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if descired
     method = "euclidean",  # Try different distance metrics
@@ -707,11 +660,10 @@ Jude_keygram <- Jude |>
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "") +
-  ggtitle("Hey Jude")
+  labs(x = "Time (s)", y = "", title = "Penny Lane (The Beatles)")
 
-Floor <-
-  get_tidy_audio_analysis("6ZJ7gv4YmbFAHCHMwsB8ZL") |>
+Radiohead <-
+  get_tidy_audio_analysis("2nTsKOXIVGDf2iPeVQO2Gm") |>
   compmus_align(sections, segments) |>
   select(sections) |>
   unnest(sections) |>
@@ -723,7 +675,7 @@ Floor <-
       )
   )
 
-Floor_keygram <- Floor |> 
+Radiohead_keygram <- Radiohead |> 
   compmus_match_pitch_template(
     key_templates,         # Change to chord_templates if descired
     method = "euclidean",  # Try different distance metrics
@@ -735,8 +687,7 @@ Floor_keygram <- Floor |>
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "") +
-  ggtitle("Phantom Of The Opera")
+  labs(x = "Time (s)", y = "", title = "Paranoid Android (Radiohead)")
 
 
 Genesis <-
@@ -764,8 +715,7 @@ Genesis_keygram <- Genesis |>
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "") +
-  ggtitle("Invisible Touch")
+  labs(x = "Time (s)", y = "", title = "Invisible Touch (Genesis)")
 
 
 Backstreet <-
@@ -793,32 +743,23 @@ Backstreet_keygram <- Backstreet |>
   geom_tile() +
   scale_fill_viridis_c(guide = "none") +
   theme_minimal() +
-  labs(x = "Time (s)", y = "") +
-  ggtitle("I Want It That Way")
+  labs(x = "Time (s)", y = "", title = "I Want It That Way (Backstreet Boys)")
 
-grid.arrange(Jude_keygram, Floor_keygram, Genesis_keygram, Backstreet_keygram, ncol = 2, nrow = 2)
+plot_grid(Beatles_keygram, Radiohead_keygram, Genesis_keygram, Backstreet_keygram, ncol = 2, nrow = 2)
 ```
 
 ***
 The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
 
-Positions of Hey Jude: 1999: no. 11, 2009: no. 23, 2019: no. 72, 2022: no. 130
+Positions of [Penny Lane](https://open.spotify.com/track/1sjmKmR4u9xDeJHjDCn2bZ?si=a4924e3ad4b0479b): 1999: no. 266, 2009: no. 324, 2019: no. 377, 2022: no. 563
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1eT2CjXwFXNx6oY5ydvzKU?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Paranoid Android](https://open.spotify.com/track/2nTsKOXIVGDf2iPeVQO2Gm?si=169004f8f51240bc): 1999: -, 2009: -, 2019: no. 342, 2022: no. 423
 
-Positions of Phantom Of The Opera: 1999: -, 2009: -, 2019: no. 1322, 2022: no. 68
+Positions of [Invisible Touch](https://open.spotify.com/track/7bkjJHsfX2rebJ3KZLegGt?si=1c48ae0e1db54a40): 1999: -, 2009: no. 1738, 2019: no. 1982, 2022: no. 130
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6ZJ7gv4YmbFAHCHMwsB8ZL?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [I Want It That Way](https://open.spotify.com/track/47BBI51FKFwOMlIiX6m8ya?si=341df457e9f94861): 1999: -, 2009: no. 1569, 2019: no. 1014, 2022: no. 910
 
-Positions of Invisible Touch: 1999: -, 2009: no. 1738, 2019: no. 1982, 2022: no. 130
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7bkjJHsfX2rebJ3KZLegGt?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Positions of I Want It That Way: 1999: -, 2009: no. 1569, 2019: no. 1014, 2022: no. 910
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1di1BEgJYzPvXUuinsYJGP?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-### Tempograms: Rainbow in the Sky and Killing in the Name {.storyboard, data-commentary-width=400}
+### Tempograms: Rainbow in the Sky and Killing in the Name {.storyboard}
 ```{r}
 Rainbow <- get_tidy_audio_analysis("2MlqP1HzhitHfFXPXKumdB")
 
@@ -827,9 +768,8 @@ Rainbow_tempogram <- Rainbow |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() +
-  ggtitle("Rainbow In The Sky")
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rainbow In The Sky (Paul Elstak)") +
+  theme_classic()
 
 Killing <- get_tidy_audio_analysis("59WN2psjkt1tyaxjspN8fp")
 
@@ -838,9 +778,8 @@ Killing_tempogram <- Killing |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() +
-  ggtitle("Killing In The Name")
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Killing In The Name (Rage Against The Machine)") +
+  theme_classic()
 
 Adele <- get_tidy_audio_analysis("5mFMb5OHI3cN0UjITVztCj")
 
@@ -849,22 +788,20 @@ Adele_tempogram <- Adele |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() +
-  ggtitle("Rumour Has It")
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rumour Has It (Adele)") +
+  theme_classic()
 
-Radiohead <- get_tidy_audio_analysis("3pRaLNL3b8x5uBOcsgvdqM")
+Rood <- get_tidy_audio_analysis("3yxFiZHkQgJmLEyhij30rr")
 
-Radiohead_tempogram <- Radiohead |>
+Rood_tempogram <- Rood |>
   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
   scale_fill_viridis_c(guide = "none") +
-  labs(x = "Time (s)", y = "Tempo (BPM)") +
-  theme_classic() +
-  ggtitle("Paranoid Android")
+  labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rood (Marco Borsato)") +
+  theme_classic()
 
-grid.arrange(Rainbow_tempogram, Killing_tempogram, Adele_tempogram, Radiohead_tempogram, ncol = 2, nrow = 2)
+plot_grid(Rainbow_tempogram, Killing_tempogram, Adele_tempogram, Rood_tempogram, ncol = 2, nrow = 2)
 ```
 
 ***
@@ -888,23 +825,15 @@ The tempogram of Killing in the Name by the band Rage Against the Machine looks 
 
 Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many years before its introduction to the TOP2000 in 2011. Although the song entered at a relatively low position (no. 1454), the song has kept a steady position in the years following: ranging between no. 94 and no. 48. 
 
-Positions of Rainbow in the Sky: 1999: -, 2009: -, 2019: no. 386, 2022: no. 366
+Positions of [Rainbow in the Sky](https://open.spotify.com/track/2MlqP1HzhitHfFXPXKumdB?si=e2bdad09cfb343b4): 1999: -, 2009: -, 2019: no. 386, 2022: no. 366
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2MlqP1HzhitHfFXPXKumdB?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Killing In The Name](https://open.spotify.com/track/59WN2psjkt1tyaxjspN8fp?si=00be500cee6e4ae7): 1999: -, 2009: -, 2019: no. 60, 2022: no. 48
 
-Positions of Killing in the name: 1999: -, 2009: -, 2019: no. 60, 2022: no. 48
+Positions of [Rumour Has It](https://open.spotify.com/track/5mFMb5OHI3cN0UjITVztCj?si=423627eababe4cd0): 1999: -, 2009: -, 2019: no. 1377, 2022: no. 1627
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/59WN2psjkt1tyaxjspN8fp?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+Positions of [Rood](https://open.spotify.com/track/3yxFiZHkQgJmLEyhij30rr?si=246eb44e6acf4c70): 1999: -, 2009: no. 79, 2019: no. 498, 2022: no. 1456
 
-Positions of Rumour Has It: 1999: -, 2009: -, 2019: no. 1377, 2022: no. 1627
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/50yHVBbU6M4iIfqBI1bxWx?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-Positions of Paranoid Android: 1999: -, 2009: -, 2019: no. 342, 2022: no. 423
-
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2nTsKOXIVGDf2iPeVQO2Gm?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
-### Timbre in the Top 2000 {.storyboard, data-commentary-width=400}
+### Timbre in the Top 2000 {.storyboard}
 ```{r}
 Top1999timbre <-
   get_playlist_audio_features(
@@ -965,7 +894,7 @@ Top2000timbre |>
 ***
 This plot shows the timbre values from 3 years of the TOP 2000. Only the first 100 songs of the playlists are used for this plot. A few timbre coefficients show differences between the four years. For example c02, c04, c06 and c012. In c06 the year of 2009 stands out, the violin has a much longer shape compared to the other years. The same is true for c12 where 1999 has a longer and different shape than the other years. The violins of 2019 and 2022 are very alike for all of the timbre coefficients. This might be because there are only 3 years in between. It means that the first 100 songs in these playlists "sound" relatively the same.
 
-### Loudness, tempo and duration {.storyboard, data-commentary-width=400}}
+### Loudness, tempo and duration {.storyboard}
 ```{r}
 Top2000timbre |>
   mutate(
@@ -1004,7 +933,7 @@ Top2000timbre |>
 ***
 This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
 
-### Dendrogram TOP2000 {.storyboard, data-commentary-width=400}
+### Dendrogram TOP2000 {.storyboard}
 
 ```{r}
 halloween <-

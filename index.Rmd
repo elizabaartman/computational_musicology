@@ -234,7 +234,7 @@ Bohemian_chromagram <- Bohemian |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Bohemian Rhapsody \n(Queen)") +
   theme_minimal() +
-  scale_fill_viridis_c(option = "G", guide = "none")
+  scale_fill_viridis_c(option = "B", guide = "none")
 
 
 Brel <- 
@@ -257,7 +257,7 @@ Brel_chromagram <- Brel |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Ne Me Quitte Pas \n(Jacques Brel)") +
   theme_minimal() +
-  scale_fill_viridis_c(option = "G", guide = "none")
+  scale_fill_viridis_c(option = "B", guide = "none")
 
 
 FixYou1 <- 
@@ -280,7 +280,7 @@ FixYou1_chromagram <- FixYou1 |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Fix You \n(Coldplay)") +
   theme_minimal() +
-  scale_fill_viridis_c(option = "G", guide = "none")
+  scale_fill_viridis_c(option = "B", guide = "none")
 
 
 Ramses <- 
@@ -303,9 +303,9 @@ Ramses_chromagram <- Ramses |>
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Zing - Vecht - Huil - Bid - Lach - \nWerk en Bewonder (Ramses Shaffy)") +
   theme_minimal() +
-  scale_fill_viridis_c(option = "G", guide = "none")
+  scale_fill_viridis_c(option = "B", guide = "none")
 
-plot_grid(Bohemian_chromagram, Brel_chromagram, FixYou1_chromagram, Ramses_chromagram, ncol = 1)
+plot_grid(Bohemian_chromagram, Brel_chromagram, FixYou1_chromagram, Ramses_chromagram, axis = "l", ncol = 2, nrow = 2)
 ```
 
 ***
@@ -377,9 +377,9 @@ Goldband_cepstrogram <- Goldband |>
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 87, colour = "red") +
+  geom_vline(xintercept = 87, colour = "white") +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Noodgeval \n(Goldband)") +
-  scale_fill_viridis_c(option = "G", guide = "none") +                             
+  scale_fill_viridis_c(option = "B", guide = "none") +                             
   theme_classic()
 
 
@@ -415,7 +415,7 @@ Summertime_cepstrogram <- Summertime |>
   ) +
   geom_tile() +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Summertime \n(Billie Holiday)") +
-  scale_fill_viridis_c(option = "G", guide = "none") +                             
+  scale_fill_viridis_c(option = "B", guide = "none") +                             
   theme_classic()
 
 
@@ -450,13 +450,13 @@ Nirvana_cepstrogram <- Nirvana |>
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 46, colour = "red") +
-  geom_vline(xintercept = 87, colour = "red") +
-  geom_vline(xintercept = 123, colour = "red") +
-  geom_vline(xintercept = 183, colour = "red") +
-  geom_vline(xintercept = 218, colour = "red") +
+  geom_vline(xintercept = 46, colour = "white") +
+  geom_vline(xintercept = 87, colour = "white") +
+  geom_vline(xintercept = 123, colour = "white") +
+  geom_vline(xintercept = 163, colour = "white") +
+  geom_vline(xintercept = 218, colour = "white") +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Heart-Shaped Box \n(Nirvana)") +
-  scale_fill_viridis_c(option = "G", guide = "none") +                             
+  scale_fill_viridis_c(option = "B", guide = "none") +                             
   theme_classic()
 
 
@@ -491,13 +491,12 @@ DoeMaar_cepstrogram <- DoeMaar |>
     )
   ) +
   geom_tile() +
-  geom_vline(xintercept = 123, colour = "red") +
   labs(x = "Time (s)", y = NULL, fill = "Magnitude", title = "Belle Hélène \n(Doe Maar)") +
-  scale_fill_viridis_c(option = "G", guide = "none") +                            
+  scale_fill_viridis_c(option = "B", guide = "none") +                            
   theme_classic()
 
 
-plot_grid(Goldband_cepstrogram, Summertime_cepstrogram, Nirvana_cepstrogram, DoeMaar_cepstrogram, ncol = 1)
+plot_grid(Goldband_cepstrogram, Summertime_cepstrogram, Nirvana_cepstrogram, DoeMaar_cepstrogram, ncol = 2, nrow = 2)
 ```
 
 ***
@@ -534,7 +533,6 @@ Sadly, Henny Vrienten, the lead singer and bass player of Doe Maar passed away i
 
 
 ### How is one of the saddest songs in the TOP2000 structured: Self-similarity Matrices {.storyboard}
-
 ```{r}
 Queen9 <-
   get_tidy_audio_analysis("3SGP8It5WDnCONyApJKRTJ") |>
@@ -576,7 +574,7 @@ bind_rows(
   geom_tile() +
   coord_fixed() +
   facet_wrap(~type) +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_classic() + 
   labs(x = "", y = "", title = "Who Wants to Live Forever (Queen)")
 
@@ -621,20 +619,25 @@ bind_rows(
   geom_tile() +
   coord_fixed() +
   facet_wrap(~type) +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_classic() + 
   labs(x = "", y = "", title = "Dancing Queen (ABBA)")
+
+plot_grid(Queen9, ABBA9, ncol = 1, nrow = 2, align = "h")
 ```
 
 ***
 **Self-similarity matrices**
+
 A self-similarity matrix can explain the structure of the song. These matrices can be either based on chroma (pitch class) or timbre.
 
 **Saddest song in the TOP2000: Who Wants to Live Forever**
+
 The self-similarity matrices explain the structure of the song. In both matrices there are some clear distinctions visible between parts of the song. For example around 85 seconds, the moment when the chorus starts, there is a sharp change in both matrices.
 
 **Everyone's favourite Eurovision band: ABBA**
-This is a self-similarity matrix based on ABBA's song Dancing Queen. 
+
+This is a self-similarity matrix based on ABBA's song Dancing Queen. Both the chroma and timbre matrix show clearly that Dancing Queen consists of several parts with similar structures. The song starts with an intro that evolves into a part of the chorus. After this, from 43 seconds the first verse starts. In the timbre matrix this is the second purple square that follows the diagonal. The third purple box that starts at around 85 seconds indicates the start of the chorus. The chorus is followed by a shorter second verse, another chorus and an outro. The chroma matrix tells us that the song can be cut into even smaller sections, the chorus can for example be divided into two parts.
 
 **Positions in TOP2000**
 
@@ -668,7 +671,7 @@ Beatles_keygram <- Beatles |>
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Penny Lane \n(The Beatles)")
 
@@ -695,7 +698,7 @@ Radiohead_keygram <- Radiohead |>
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Paranoid Android \n(Radiohead)")
 
@@ -723,7 +726,7 @@ Genesis_keygram <- Genesis |>
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "Invisible Touch \n(Genesis)")
 
@@ -751,7 +754,7 @@ Backstreet_keygram <- Backstreet |>
     aes(x = start + duration / 2, width = duration, y = name, fill = d)
   ) +
   geom_tile() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(option = "B", guide = "none") +
   theme_minimal() +
   labs(x = "Time (s)", y = "", title = "I Want It That Way \n(Backstreet Boys)")
 
@@ -767,12 +770,15 @@ lsjdlfksd
 The keygram is shown for Hey Jude by the Beatles. According to the keygram the key of the song changes a few times. it looks like the song starts with a short intro in A-minor and then moves to the key of F-major. After this there are two quick changes, the first of which is to Bb-minor or Bb-major. The keygram shows the same magnitude for these keys but it would make more sense that it's Bb-major because this key is closer related to the previous keys. After this the key goes back to F-major and then to the dominant of F, the C-major. The remaining part of the song the key changes between these two keys, the F-major and the C-major. Even though most of the key changes aren't that surprising, the fact that there are several changes makes it interesting to listen to. 
 
 **Paranoid Android**
+
 This song indeed makes me Paranoid, but in a good way!
 
 **Invisible Touch**
+
 sldfjsk
 
 **I Want It That Way**
+
 sdlfkjsldkf
 
 **Positions in TOP2000**
@@ -793,7 +799,7 @@ Rainbow_tempogram <- Rainbow |>
   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(guide = 'none') +
   labs(x = "Time (s)", y = "Tempo (BPM)", title = "Rainbow In The Sky \n(Paul Elstak)") +
   theme_classic()
 
@@ -803,9 +809,11 @@ Killing_tempogram <- Killing |>
   tempogram(window_size = 8, hop_size = 1, cyclic = FALSE) |>
   ggplot(aes(x = time, y = bpm, fill = power)) +
   geom_raster() +
-  scale_fill_viridis_c(option = "G", guide = "none") +
+  scale_fill_viridis_c(guide = 'none') +
   labs(x = "Time (s)", y = "Tempo (BPM)", title = "Killing In The Name \n(Rage Against The Machine)") +
   theme_classic()
+
+plot_grid(Rainbow_tempogram, Killing_tempogram, ncol = 1)
 ```
 
 ***
@@ -826,6 +834,7 @@ Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many ye
 The tempogram of Killing in the Name by the band Rage Against the Machine looks very different compared to Rainbow in the Sky's tempogram. In this tempogram there is no straight yellow line. This means a few things. Firstly, Killing in the Name isn't an electronic track like Rainbow in the Sky. This means that the drummer needs to keep the exact same pace for some time, which can be hard. That makes the tempo in Killing in the Name automatically more dynamic and the yellow lines not as straight. A second reason for the bumpy lines could be the noise in the song. Everything in the song comes across as loud, the singing (or one could say almost screaming) and the lead guitar that has several solos for example. These parts don't have a very clear on beat tempo which might interfere with the tempo of the drums. The final reason for why there isn't a straight line, are the tempo changes. These changes are quite obvious when you listen to the song. A clear example of one of these changes is at 2 min. 25 (145 seconds). The song switches here from the chorus to the second verse. The chorus has strong vocals and a heavy guitar with a slightly faster beat than the verse which has the characteristic guitar riff with softer vocals.
 
 **Positions in TOP2000**
+
 [Rainbow in the Sky](https://open.spotify.com/track/2MlqP1HzhitHfFXPXKumdB?si=e2bdad09cfb343b4): 1999: -, 2009: -, 2019: no. 386, 2022: no. 366
 
 [Killing In The Name](https://open.spotify.com/track/59WN2psjkt1tyaxjspN8fp?si=00be500cee6e4ae7): 1999: -, 2009: -, 2019: no. 60, 2022: no. 48
@@ -893,7 +902,7 @@ This plot shows the timbre values from 3 years of the TOP 2000. Only the first 1
 
 ### Loudness, tempo and duration {.storyboard}
 ```{r}
-Scattertimbre <- Top2000timbre |>
+Top2000timbreplotly <- Top2000timbre |>
   mutate(
     sections =
       map(
@@ -908,22 +917,24 @@ Scattertimbre <- Top2000timbre |>
     aes(
       x = tempo,
       y = tempo_section_sd,
-      colour = year,
-      alpha = loudness,
+      colour = loudness,
       text = track.name
     )
   ) +
   geom_point(aes(size = duration / 60)) +
   geom_rug() +
+  facet_wrap(~year) +
   theme_light() +
+  scale_colour_gradientn(colours = terrain.colors(10)) +
   ylim(0, 5) +
   labs(
     x = "Mean Tempo (bpm)",
     y = "SD Tempo",
-    colour = "Year",
     size = "Duration (min)",
-    alpha = "Volume (dBFS)"
+    colour = "Volume (dBFS)"
   )
+
+ggplotly(Top2000timbreplotly)
 ```
 
 ***
@@ -934,7 +945,7 @@ lskdfjlsdkf
 This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
 
 ### Dendrogram TOP2000 {.storyboard}
-```{r}
+```{r, fig.width=10, fig.height=4}
 Dendro1999 <-
   get_playlist_audio_features("1999", "6VEGxOyJCx6WYTXJIBy0tb") |>
   add_audio_analysis() |>
@@ -976,9 +987,13 @@ Dendro1999_dist |>
   hclust(method = "average") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
+```
 
+***
+Dendrogram blablabla
 
-
+### Dendrogram 2009
+```{r, fig.width=10, fig.height=4}
 Dendro2009 <-
   get_playlist_audio_features("2009", "0qoaHjMRoMN7v9A56R5yYB") |>
   add_audio_analysis() |>
@@ -1021,8 +1036,13 @@ Dendro2009_dist |>
   dendro_data() |>
   ggdendrogram()
 
+```
 
+***
+2009: Metallica One weg
 
+### Dendrogram 2019
+```{r, fig.width=10, fig.height=4}
 Dendro2019 <-
   get_playlist_audio_features("2019", "0qoaHjMRoMN7v9A56R5yYB") |>
   add_audio_analysis() |>
@@ -1064,9 +1084,17 @@ Dendro2019_dist |>
   hclust(method = "average") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
+```
 
+***
+2019: Jeff Buckley Hallulajah weg
 
+2019: One Mary J Blige and U2 weg
 
+2019: Metallica One weg
+
+### Dendrogram 2022
+```{r, fig.width=10, fig.height=4}
 Dendro2022 <-
   get_playlist_audio_features("2022", "0qoaHjMRoMN7v9A56R5yYB") |>
   add_audio_analysis() |>
@@ -1110,13 +1138,12 @@ Dendro2022_dist |>
   ggdendrogram()
 ```
 
+
 ***
-2009: Metallica One weg
-2019: Jeff Buckley Hallulajah weg
-2019: One Mary J Blige and U2 weg
-2019: Metallica One weg
 2022: One Mary J Blige and U2 weg
+
 2022: Metallica One weg
+
 2022: The Sound of Silence Disturbed weg
 
 Conclusion

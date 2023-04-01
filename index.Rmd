@@ -7,7 +7,7 @@ output:
     self_contained: false
     theme: simplex
     vertical_layout: fill
-    horizontal_layout: scroll
+    horizontal_layout: fill
 ---
 
 ```{r}
@@ -844,14 +844,14 @@ The tempogram of Killing in the Name by the band Rage Against the Machine looks 
 Top1999timbre <-
   get_playlist_audio_features(
     "thesoundsofspotify",
-    "55s8gstHcaCyfU47mQgLrB"
+    "0qSHbyaiZbhacDdIegMoBR"
   ) |>
   slice(1:100) |>
   add_audio_analysis()
 Top2009timbre <-
   get_playlist_audio_features(
     "thesoundsofspotify",
-    "2cjIvuw4VVOQSeUAZfNiqY"
+    "6BJbzcSvOunQpVCJuBLxEW"
   ) |>
   slice(1:100) |>
   add_audio_analysis()
@@ -945,7 +945,7 @@ lskdfjlsdkf
 This plot shows the loudness tempo and duration of the first 100 songs in four years in the TOP2000.
 
 ### Dendrogram TOP2000 {.storyboard}
-```{r, fig.width=10, fig.height=4}
+```{r, fig.width=11, fig.height=4}
 Dendro1999 <-
   get_playlist_audio_features("1999", "6VEGxOyJCx6WYTXJIBy0tb") |>
   add_audio_analysis() |>
@@ -977,14 +977,14 @@ Dendro1999_juice <-
   step_center(all_predictors()) |>
   step_scale(all_predictors()) |> 
   # step_range(all_predictors()) |> 
-  prep(Dendro1999 |> mutate(track.name = str_trunc(track.name, 20))) |>
+  prep(Dendro1999 |> mutate(track.name = str_trunc(track.name, 25))) |>
   juice() |>
   column_to_rownames("track.name")
 
 Dendro1999_dist <- dist(Dendro1999_juice, method = "euclidean")
 
 Dendro1999_dist |> 
-  hclust(method = "average") |> # Try single, average, and complete.
+  hclust(method = "complete") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
 ```
@@ -993,7 +993,7 @@ Dendro1999_dist |>
 Dendrogram blablabla
 
 ### Dendrogram 2009
-```{r, fig.width=10, fig.height=4}
+```{r, fig.width=11, fig.height=4}
 Dendro2009 <-
   get_playlist_audio_features("2009", "0qoaHjMRoMN7v9A56R5yYB") |>
   add_audio_analysis() |>
@@ -1025,14 +1025,14 @@ Dendro2009_juice <-
   step_center(all_predictors()) |>
   step_scale(all_predictors()) |> 
   # step_range(all_predictors()) |> 
-  prep(Dendro2009 |> mutate(track.name = str_trunc(track.name, 20))) |>
+  prep(Dendro2009 |> mutate(track.name = str_trunc(track.name, 25))) |>
   juice() |>
   column_to_rownames("track.name")
 
 Dendro2009_dist <- dist(Dendro2009_juice, method = "euclidean")
 
 Dendro2009_dist |> 
-  hclust(method = "average") |> # Try single, average, and complete.
+  hclust(method = "complete") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
 
@@ -1042,9 +1042,9 @@ Dendro2009_dist |>
 2009: Metallica One weg
 
 ### Dendrogram 2019
-```{r, fig.width=10, fig.height=4}
+```{r, fig.width=11, fig.height=4}
 Dendro2019 <-
-  get_playlist_audio_features("2019", "0qoaHjMRoMN7v9A56R5yYB") |>
+  get_playlist_audio_features("2019", "3qlSwTObXFlCAPg6HMOT7h") |>
   add_audio_analysis() |>
   mutate(
     segments = map2(segments, key, compmus_c_transpose),
@@ -1074,14 +1074,14 @@ Dendro2019_juice <-
   step_center(all_predictors()) |>
   step_scale(all_predictors()) |> 
   # step_range(all_predictors()) |> 
-  prep(Dendro2019 |> mutate(track.name = str_trunc(track.name, 20))) |>
+  prep(Dendro2019 |> mutate(track.name = str_trunc(track.name, 25))) |>
   juice() |>
   column_to_rownames("track.name")
 
 Dendro2019_dist <- dist(Dendro2019_juice, method = "euclidean")
 
 Dendro2019_dist |> 
-  hclust(method = "average") |> # Try single, average, and complete.
+  hclust(method = "complete") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
 ```
@@ -1094,9 +1094,9 @@ Dendro2019_dist |>
 2019: Metallica One weg
 
 ### Dendrogram 2022
-```{r, fig.width=10, fig.height=4}
+```{r, fig.width=11, fig.height=4}
 Dendro2022 <-
-  get_playlist_audio_features("2022", "0qoaHjMRoMN7v9A56R5yYB") |>
+  get_playlist_audio_features("2022", "3mC8WmcqnXTtM0A4hOKyNc") |>
   add_audio_analysis() |>
   mutate(
     segments = map2(segments, key, compmus_c_transpose),
@@ -1126,14 +1126,14 @@ Dendro2022_juice <-
   step_center(all_predictors()) |>
   step_scale(all_predictors()) |> 
   # step_range(all_predictors()) |> 
-  prep(Dendro2022 |> mutate(track.name = str_trunc(track.name, 20))) |>
+  prep(Dendro2022 |> mutate(track.name = str_trunc(track.name, 25))) |>
   juice() |>
   column_to_rownames("track.name")
 
 Dendro2022_dist <- dist(Dendro2022_juice, method = "euclidean")
 
 Dendro2022_dist |> 
-  hclust(method = "average") |> # Try single, average, and complete.
+  hclust(method = "complete") |> # Try single, average, and complete.
   dendro_data() |>
   ggdendrogram()
 ```

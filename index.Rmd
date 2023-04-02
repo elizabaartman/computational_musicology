@@ -744,11 +744,11 @@ A keygram shows the key for a section over time. For this 'gram', the darkest ar
 
 One of my dad's favourite songs in the TOP2000 turns out to be a great example to show how keygrams work. The Whole of the Moon by the Waterboys is a family classic and every year we hope it gains a few places. Since 2005 the song has had a stable position, somewhere between no. 320 to no. 410. Maybe I'm biased, but the keygram makes the song look very boring. The song starts in C major, the song ends in C major and in between nothing really happens either. At some points it is unclear whether the keygram shows C major, F major or even C minor, but by listening to the music it becomes pretty clear that really nothing changes. Either other features of the song make it interesting, or my dad likes simplicity. 
 
-**I Want It That Way**
+**The boyband of the 90s: The Backstreet Boys**
 
 The Backstreet Boys spice it up a little bit by adding a modulation to their song I Want It That Way. First of all, it is not very clear if the song is in A major or F# minor, the patches are equally as purple. The answer is that the song probably is written in A major, but that the song has a lot of quality for F# minor too. A major makes more sense when we look at the modulation that is happening around 147 seconds. The second part of the song is in B major, which is a whole step up from A major. A modulation from F#m to B would also be possible but it is not as common, hence why I think it is more likely that the song starts in A major.
 
-**Penny Lane**
+**The band with the most songs: The Beatles**
 
 There is no way that I can't mention the Beatles in this project. In a lot of editions the band had most songs in the list. In 2008 they reached an all time high with 55 songs in the TOP2000. One of these songs is Penny Lane.
 Based on the key, the song is more complex than the other two mentioned on this tab. According to the keygram, a large portion of the song is in Gb major(/F# major). However, this turned out to be a mistake, instead the song's main key is B major. The dominant tone for this key is F#, which is probably why the keygram shows the key of F# major. The verses are in B major, but the song modulates to A major going into the choruses. Additionally, the last chorus is repeated using the same modulation as in I want it that way, a whole step up from A major. The song is now back and ends in the 'original key' B major. This alternating of keys contributes to the contrasting verse and chorus form that the song uses.
@@ -792,13 +792,13 @@ plot_grid(Rainbow_tempogram, Killing_tempogram, ncol = 1)
 
 A tempogram shows the BPM of a song over time. In this case the yellow lines show the BPM at a certain point in the song. Sometimes there is more than one yellow line visible, these 'extra' lines are tempo octaves.
 
-**The tempogram of Rainbow in the Sky**
+**Happy Hardcore with Rainbow in the Sky**
 
 Rainbow in the Sky was released in 1995 but only entered the TOP2000 in 2015 at no. 765. Since, the song has been gaining a few places each year. Last edition, in 2022, the song ended up at the highest position yet, no. 366.
 
 This is a tempogram of Rainbow in the Sky by DJ Paul Elstak. The tempogram shows a straight line throughout the entire song around 360 BPM. At around 10 seconds and 75 seconds there are other yellow dots visible for 180 BPM, these are the tempo octaves. Rainbow in the Sky is an electronic track in the genre of happy hardcore. This explains the straight line in the tempogram, the electronically created beats happen in a very steady pace.
 
-**The tempogram of Killing in the Name**
+**Headbanging with Killing in the Name**
 
 Just like Rainbow in the Sky, Killing in the Name was released (in 1992) many years before its introduction to the TOP2000 in 2011. Although the song entered at a relatively low position (no. 1454), the song has kept a steady position in the years following: ranging between no. 94 and no. 48. 
 
@@ -1208,15 +1208,17 @@ Column {data-width=500}
 
 For this project I wanted to find out whether the sound of the TOP2000 has changed over the past 23 years. I have analysed individual songs, as well as the lists of four years as a whole to try come to a conclusion. I have tried to analyse as many different songs as possible, including outliers, several genres and eras.
 
-**Chromagrams**
+**Individual song analysis**
 
-The chromagrams showed that there are different levels of complexity when it comes to use of chroma. However, the level of complexity doesn't necessarily give the song a better position in the TOP2000. From the chromagrams we are able to distinguish different parts of songs (Fix You), but we are also able to do this if we use cepstrograms (Heart-Shaped Box). 
+The chromagrams show that there are different levels of complexity when it comes to the use of chroma. However, the level of complexity doesn't necessarily give the song a better position in the TOP2000. From the chromagrams we are able to distinguish different parts of songs (Fix You), but we are also able to do this if we use cepstrograms (Heart-Shaped Box).  For the cepstrograms I have used songs from different decades. Summertime stands out by showing a high magnitude for c03 which makes me believe that it may be characteristic for songs from the 30s. This is only based on one song and would need to be researched further before making any conclusions. The self-similarity matrices show two examples of songs with a different structure. The keygrams also range from simple with The Whole of the Moon to more complex with Penny Lane. In the tempograms we see a similar pattern, Rainbow In The Sky shows a straight line while Killing In The Name is more dynamic in tempo. In conclusion, the individual song analysis tells us that there is something of everything in the TOP2000 and that there doesn't seem to be a relation between certain patterns in combination with a type of genre or era. 
 
-**Cepstrograms**
+**Year analysis**
 
-For the cepstrograms I used songs from different decades. Summertime stood out by showing a high magnitude for c03 which makes me believe that it might be possible
+The scatterplot about danceability, valence and mode already shows a very small difference between 1999, 2009, 2019 and 2022. This minimal change is confirmed by the violinplot that is based on the timbre coefficients. Again, in the scatterplot about loudness, tempo and duration the same pattern is visible, that all years portray a similar distribution.
 
-**
+**Final thoughts**
+
+From these results I would argue that the TOP2000 hasn't changed in sound. As a discussion point I want to add that for some plots or grams I only used the first 250 or 100 songs from the lists. The results may change if the entire TOP2000 is analysed, but I don't expect any big differences compared to the current outcome.
 
 Column {data-width=250}
 ---------------------------------------------------

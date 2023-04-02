@@ -166,7 +166,7 @@ Column {data-width=250}
 Visualisations {.storyboard}
 ==================================================
 
-### Every year looks the same?! {.storyboard}
+### Every year looks the same?! Part 1: Danceability, valence and mode {.storyboard}
 
 ```{r}
 Top2000_scatter <- Top2000lists |>
@@ -212,7 +212,7 @@ Unfortunately, Spotify is very vague about how exactly these features are measur
 
 The general trend in the four years seems very comparable, the dots show a slight diagonal line. Overall, you can probably say that the lower the valence, the less danceable the song and the higher the valence the more danceable the song. There are a few songs that deviate from the diagonal, for example Funkytown by Lipps Inc (in the 1999 plot) and The Next Episode by Dr. Dre and Snoop Dogg (in the 2019 and 2022 plot). Both have a higher dancebility than what one might expect from its valence value.
 
-### How pitch makes Bohemian Rhapsody number 1: chromagrams {.storyboard}
+### How pitch makes Bohemian Rhapsody number 1: Chromagrams {.storyboard}
 ```{r}
 Bohemian <-
   get_tidy_audio_analysis("4u7EnebtmKWzUH433cf5Qv") |>
@@ -344,7 +344,7 @@ Zing Vecht Huil Bid Lach Werk en Bewonder shows a high magnitude for both the pi
 
 [Zing Vecht Huil Bid Lach Werk en Bewonder](https://open.spotify.com/track/4WCySsw36GzONhLAaBtn2g?si=e9f401df5af54e4e): 1999: no. 297, 2009: no. 7, 2019: no. 167, 2022: no. 319
 
-### Cepstrograms: Who Wants to Live Forever might be the saddest song in the TOP2000 {.storyboard}
+### How the oldest song and highest new entrant differ: Cepstrograms {.storyboard}
 ```{r}
 Goldband <-
   get_tidy_audio_analysis("2LcmbuYX7tyR4DWy3b273L") |>
@@ -647,7 +647,7 @@ This is a self-similarity matrix based on ABBA's song Dancing Queen. A much happ
 
 [Dancing Queen](https://open.spotify.com/track/0GjEhVFGZW8afUYGChu3Rr?si=8e4e72e8444f442f): 1999: no. 16, 2009: no. 70, 2019: no. 68, 2022: no. 44
 
-### Key-changes are exciting! Keygrams {.storyboard}
+### Key-changes by your favourite boyband: Keygrams {.storyboard}
 ```{r}
 Waterboys <-
   get_tidy_audio_analysis("11zWfCQaGkXJ9uIXROr4pa") |>
@@ -762,7 +762,7 @@ Based on the key, the song is more complex than the other two mentioned on this 
 [Penny Lane](https://open.spotify.com/track/1sjmKmR4u9xDeJHjDCn2bZ?si=a4924e3ad4b0479b): 1999: no. 266, 2009: no. 324, 2019: no. 377, 2022: no. 563
 
 
-### Tempograms: Rainbow in the Sky and Killing in the Name {.storyboard}
+### Happy hardcore or happy hardrock? Tempograms {.storyboard}
 ```{r}
 Rainbow <- get_tidy_audio_analysis("2MlqP1HzhitHfFXPXKumdB")
 
@@ -810,7 +810,7 @@ The tempogram of Killing in the Name by the band Rage Against the Machine looks 
 
 [Killing In The Name](https://open.spotify.com/track/59WN2psjkt1tyaxjspN8fp?si=00be500cee6e4ae7): 1999: -, 2009: -, 2019: no. 60, 2022: no. 48
 
-### Timbre in the Top 2000 {.storyboard}
+### Every year looks the same?! Part 2: Timbre {.storyboard}
 ```{r}
 Top1999timbre1 <-
   get_playlist_audio_features(
@@ -871,7 +871,7 @@ Top2000timbre1 |>
 ***
 This plot shows the timbre values from 4 years of the TOP 2000. Only the first 250 songs of the playlists are used for this plot. A few timbre coefficients show few differences between the four years. The biggest difference is visible in c02, this is the coefficient for brightness. The year of 1999 stand out because its violin is longer than the other violins. Overall there aren't too many differences which suggests that the first 250 songs in these playlists "sound" relatively the same. It would be interesting to research whether the results would be the same if all 2000 songs were included and not just the top 250.
 
-### Loudness, tempo and duration {.storyboard}
+### Every year looks the same?! Part 3: Loudness, tempo and duration {.storyboard}
 ```{r}
 Top2000timbreplotly <- Top2000timbre1 |>
   mutate(
@@ -919,7 +919,7 @@ What do volume, tempo and duration mean? Duration stands for the length of the s
 
 In the previous tab we saw that there aren't that many differences in timbre between the 4 years. I would argue that that is the case for this plot. The distribution of the dots is relatively comparable for the 4 years. In all four years there are 2 big clusters of dots, the first one between 1 and 2.25 SD Tempo and 100-125 BPM. The second cluster is located between 0 and 1 SD Tempo and 125-150 BPM. Moreover, the duration of the songs (size of the dots) and the amount of green and red also seems similar for all 4 years.
 
-### Dendrogram 1999 {.storyboard}
+### Tonight we're gonna party like it's 1999 {.storyboard}
 ```{r}
 Top1999timbre <-
   get_playlist_audio_features(
@@ -1018,7 +1018,7 @@ Another group consists of My Heart Will Go On (Celine Dion), Bridge Over Trouble
 Lastly, it is also interesting that sometimes two songs by the same artists are considered most similar out of these 100 songs. There is for example a duo with Let It Be and Strawberry Fields Forever by The Beatles and another duo is Dancing Queen and The Winner Takes It All by ABBA. A reason for this can be the production of these songs, the voices of these artists and/or the use of instruments.
 
 
-### Dendrogram 2009
+### Tonight we're gonna party like it's 2009
 ```{r, fig.width=12, fig.height=5}
 Dendro2009 <-
   get_playlist_audio_features("2009", "0qoaHjMRoMN7v9A56R5yYB") |>
@@ -1080,7 +1080,7 @@ Again, songs with the same genre find each other. Smells Like Teen Spirit (Nirva
 The most interesting thing from this dendrogram is probably the two clusters of Dutch songs. There is one cluster with the songs Dochters (Marco Borsato), Avond (Boudewijn de Groot), De Vondeling van Ameland (Boudewijn de Groot) and one cluster with the songs Over de Muur (Klein Orkest), Zing Vecht Huil Bid Lach Werk en Bewonder (Ramses Shaffy), Het Dorp (Wim Sonneveld). Furthermore, these two clusters are close together as well. This could mean that there's a specific Dutch sound in certain songs.
 
 
-### Dendrogram 2019
+### Tonight we're gonna party like it's 2019
 ```{r, fig.width=12, fig.height=5}
 Dendro2019 <-
   get_playlist_audio_features("2019", "3qlSwTObXFlCAPg6HMOT7h") |>
@@ -1138,7 +1138,7 @@ Sometimes the dendrogram can be very suprising and put songs together that you w
 
 Another noticeable song is Sound of Silence. In the top 100 of 2019 the song appears twice, the original by Simon & Garfunkel and the cover by Disturbed. Both songs sound completely different and therefore it was expected that both songs would end up far away from each other but I think it is still worth mentioning.
 
-### Dendrogram 2022
+### Tonight we're gonna party like it's 2022
 ```{r, fig.width=12, fig.height=5}
 Dendro2022 <-
   get_playlist_audio_features("2022", "3mC8WmcqnXTtM0A4hOKyNc") |>
